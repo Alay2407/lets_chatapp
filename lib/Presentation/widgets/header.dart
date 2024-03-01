@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lets_chatapp/constants/AppRoutes.dart';
 
 class Header extends StatelessWidget {
   const Header({super.key});
@@ -12,7 +13,7 @@ class Header extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(context, AppRoutes.onBoarding, (Route<dynamic> route) => false);
             },
             child: const Icon(
               Icons.keyboard_backspace_outlined,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lets_chatapp/Presentation/authentication/loginPage.dart';
-import 'package:lets_chatapp/Presentation/authentication/signupPage.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lets_chatapp/Presentation/widgets/txtButton.dart';
-import 'package:lets_chatapp/core/utilities/strings.dart';
+import 'package:lets_chatapp/constants/strings.dart';
 
+import '../../constants/AppRoutes.dart';
 import '../../core/colors/colors.dart';
 
 class FirstPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class FirstPage extends StatefulWidget {
 class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemStatusBarContrastEnforced: false, statusBarIconBrightness: Brightness.light, statusBarBrightness: Brightness.light));
     return Scaffold(
       backgroundColor: ColorManager.dark,
       body: Stack(
@@ -36,7 +38,7 @@ class _FirstPageState extends State<FirstPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(top: 85, left: 26),
+                        padding: EdgeInsets.only(top: 35, left: 26),
                         child: Text(
                           'Connect\nfriends\neasily &\nquickly',
                           style: TextStyle(
@@ -57,32 +59,45 @@ class _FirstPageState extends State<FirstPage> {
                       ),
                     ],
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 38),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image(
-                          image: AssetImage(
-                            "assets/images/fb.png",
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Image(
-                            image: AssetImage(
-                              "assets/images/google.png",
+                  TxtButton(
+                    text: AppStrings.signUp,
+                    onpress: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.register,
+                      );
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.login,
+                        );
+                      },
+                      child: RichText(
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: AppStrings.existingAccount,
+                              style: TextStyle(color: Colors.white, fontSize: 14),
                             ),
-                          ),
+                            TextSpan(
+                              text: " ",
+                              style: TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                            TextSpan(
+                              text: AppStrings.login,
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                          ],
                         ),
-                        Image(
-                          image: AssetImage(
-                            "assets/images/apple.png",
-                          ),
-                        )
-                      ],
+                      ),
                     ),
                   ),
+
                   const Padding(
                     padding: EdgeInsets.only(top: 30, left: 28, right: 28),
                     child: Row(
@@ -107,44 +122,23 @@ class _FirstPageState extends State<FirstPage> {
                       ],
                     ),
                   ),
-                  TxtButton(
-                    text: AppStrings.signUp,
-                    onpress: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginPage(),
-                          ));
-                    },
-                  ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 56),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignupPage(),
-                            ));
-                      },
-                      child: RichText(
-                        text: const TextSpan(
-                          children: [
-                            TextSpan(
-                              text: AppStrings.existingAccount,
-                              style: TextStyle(color: Colors.white, fontSize: 14),
-                            ),
-                            TextSpan(
-                              text: " ",
-                              style: TextStyle(color: Colors.white, fontSize: 14),
-                            ),
-                            TextSpan(
-                              text: AppStrings.login,
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                          ],
+                    padding: EdgeInsets.only(top: 38,bottom: 20),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircleAvatar(radius: 22,child: SvgPicture.asset(SvgString.facebook), backgroundColor: ColorManager.white),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: CircleAvatar(radius: 22,child: SvgPicture.asset(SvgString.google), backgroundColor: ColorManager.white),
                         ),
-                      ),
+                        CircleAvatar(radius: 22,
+                            backgroundColor: ColorManager.white,
+                            child: SvgPicture.asset(
+                              SvgString.apple,
+                              color: ColorManager.dark,
+                            )),
+                      ],
                     ),
                   ),
                 ],
