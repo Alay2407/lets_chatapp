@@ -5,6 +5,7 @@ import 'package:lets_chatapp/domain/repositories/signup_repository.dart';
 import 'package:lets_chatapp/getit_injector.dart';
 
 import '../../core/shared_preferences/SharedPreferenceHelper.dart';
+import '../services/AppException.dart';
 
 class SignupRepositoryImpl extends SignUpRepository {
   final RetrofitClient _retrofitClient = locator<RetrofitClient>();
@@ -14,32 +15,17 @@ class SignupRepositoryImpl extends SignUpRepository {
   final sharedPrefLocator = locator.get<SharedPreferenceHelper>();
 
   @override
-  Future<SignupResponse> signUp(
-    String name,
-    String email,
-    String password,
-    String confirmPassword,
-  ) async {
-    try {
-      print('called signup');
-      // print('retrofitClient==> $_retrofitClient');
-      SignupResponse response = await _retrofitClient.signup(
-        SignupRequest(
-          name,
-          email,
-          password,
-          confirmPassword,
-        ),
-      );
-      print(response);
-      print('Click');
+  Future<SignupResponse> signUp(String name, String email, String password, String confirmPassword) async {
+    print('called signup');
+    // print('retrofitClient==> $_retrofitClient');
+    SignupResponse response = await _retrofitClient.signup(SignupRequest(name, email, password, confirmPassword));
 
-      if(response.data!=null){
-        await sharedPrefLocator.setValues(key: 'token', value: response.accessToken.toString());
-      }
+    print('Response is');
+    if (response.data != null) {
+      await sharedPrefLocator.setValues(key: 'token', value: response.accessToken.toString());
       return response;
-    } catch (e) {
-      throw e.toString();
     }
+    return response;
+    // throw AppException("Something Wrong");
   }
 }

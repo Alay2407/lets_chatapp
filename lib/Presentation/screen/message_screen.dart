@@ -48,7 +48,7 @@ class _MessageScreenState extends State<MessageScreen> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/ellipse.png"),
+                image: AssetImage(SvgString.ellipse),
                 fit: BoxFit.fitHeight,
               ),
             ),
@@ -58,7 +58,7 @@ class _MessageScreenState extends State<MessageScreen> {
               HomeScreenHeader(
                 headerName: AppStrings.home,
                 svgIconsleft: SvgString.searchIcon,
-                svgIconsright: "",
+                svgIconsright:SvgString.searchIcon,
                 searchOnpress: () {
                   Navigator.of(context, rootNavigator: true).pushNamed(
                     AppRoutes.searchScreen,
@@ -81,9 +81,9 @@ class _MessageScreenState extends State<MessageScreen> {
                               padding: EdgeInsets.all(12.0),
                               child: CircleAvatar(
                                 radius: 29,
-                                child: SvgPicture.asset(
-                                  SvgString.img6,
-                                ),
+                                // child: SvgPicture.asset(
+                                //   SvgString.img6,
+                                // ),
                               ),
                             ),
                             Expanded(

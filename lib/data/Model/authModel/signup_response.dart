@@ -1,17 +1,15 @@
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:lets_chatapp/data/Model/authModel/BaseResponse.dart';
 
 import 'data.dart';
 
 part 'signup_response.g.dart';
 @JsonSerializable()
-class SignupResponse {
-  String? msg;
+class SignupResponse extends BaseResponse {
   Data? data;
-  String? accessToken;
-  String? refreshToken;
 
-  SignupResponse({this.msg, this.data, this.accessToken, this.refreshToken});
+  SignupResponse({ this.data});
 
 
   factory SignupResponse.fromJson(Map<String, dynamic> json) =>

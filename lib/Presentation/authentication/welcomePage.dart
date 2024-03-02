@@ -23,9 +23,9 @@ class _FirstPageState extends State<FirstPage> {
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/ellipse.png"),
+                image: AssetImage(SvgString.ellipse),
                 fit: BoxFit.fitHeight,
               ),
             ),

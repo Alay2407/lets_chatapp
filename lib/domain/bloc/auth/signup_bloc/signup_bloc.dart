@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:lets_chatapp/data/Model/authModel/data.dart';
 import 'package:lets_chatapp/data/Model/authModel/signup_response.dart';
 import 'package:lets_chatapp/domain/usecases/signup_usecase.dart';
 import 'package:meta/meta.dart';
+import 'package:dio/dio.dart';
 
 part 'signup_event.dart';
 
@@ -31,10 +33,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       emit(SignupFinishedState(data));
 
       // return data;
-    } catch (e) {
-      pragma(
-        e.toString(),
-      );
+    } on DioException catch (e) {
+      print("Response message is ${e.response!.data.toString()}");
+      print("Response status is ${e.response!.statusCode.toString()}");
+      emit(SignupErrorState(e.response!.data['message']));
     }
   }
 }

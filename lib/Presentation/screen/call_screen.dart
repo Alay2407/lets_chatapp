@@ -42,7 +42,7 @@ class _CallScreenState extends State<CallScreen> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/ellipse.png"),
+                image: AssetImage(SvgString.ellipse),
                 fit: BoxFit.fitHeight,
               ),
             ),

@@ -8,13 +8,13 @@ class LoginLoadingState extends LoginState {}
 
 class LoginFinishedState extends LoginState {
 
-  final LoginResponse? loginResponse;
+  final LoginData? loginData;
 
-  LoginFinishedState(this.loginResponse);
+  LoginFinishedState(this.loginData);
 
 }
 class LoginErrorState extends LoginState {
-  final String message;
+  final String? message;
 
   LoginErrorState(this.message);
 }

@@ -21,6 +21,8 @@ class LoginPage extends StatelessWidget {
 
   LoginBloc loginBloc = locator<LoginBloc>();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -37,6 +39,9 @@ class LoginPage extends StatelessWidget {
         if (state is LoginFinishedState) {
           Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreen);
           showSnackbar(color: ColorManager.darkGrey, context: context, message: 'Login Successfully');
+        } else if (state is LoginErrorState) {
+          print('error giving');
+          showSnackbar(color: ColorManager.darkGrey, context: context, message: state.message.toString());
         }
       },
       child: Scaffold(
@@ -67,30 +72,51 @@ class LoginPage extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          AppStrings.yourEmail,
-                          style: TextStyle(color: ColorManager.txtColor),
-                        ),
-                        TextField(
-                          controller: emailController,
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        const Text(AppStrings.password,
-                            style: TextStyle(
-                              color: ColorManager.txtColor,
-                            )),
-                        TextField(
-                          controller: passwordController,
-                        ),
-                        SizedBox(
-                          height: kHeight(context) * 0.011,
-                        ),
-                      ],
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            AppStrings.yourEmail,
+                            style: TextStyle(color: ColorManager.txtColor),
+                          ),
+                          TextFormField(
+                            controller: emailController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'required';
+                              } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                                return 'required @ and .in,.com,etc.. ';
+                              }
+                            },
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          const Text(AppStrings.password,
+                              style: TextStyle(
+                                color: ColorManager.txtColor,
+                              )),
+                          TextFormField(
+                            controller: passwordController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'required';
+                              } else if (value.length < 6 || !RegExp(r'[!@#%^&*(),.?":{}|<>]').hasMatch(value)) {
+                                if (!RegExp(r'[!@#%^&*(),.?":{}|<>]').hasMatch(value)) {
+                                  return 'Password need one special charactor';
+                                }
+                                return 'Password must be at least 6 characters long';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: kHeight(context) * 0.011,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   BlocBuilder(
@@ -98,10 +124,28 @@ class LoginPage extends StatelessWidget {
                     builder: (context, state) {
                       if (state is LoginLoadingState) {
                         return CircularProgressIndicator();
-                      } else {
+                      }
+                      // else if(state is LoginErrorState){
+                      //   return GradientBtn(
+                      //     text: AppStrings.login,
+                      //     onpress: () {
+                      //
+                      //
+                      //       loginBloc.add(LoginUser(
+                      //         email: emailController.text.toString(),
+                      //         password: passwordController.text.toString(),
+                      //       ));
+                      //     },
+                      //   );
+                      // }
+                      else {
                         return GradientBtn(
                           text: AppStrings.login,
                           onpress: () {
+                            final isValid = _formKey.currentState!.validate();
+                            if (!isValid) {
+                              return;
+                            }
                             loginBloc.add(LoginUser(
                               email: emailController.text.toString(),
                               password: passwordController.text.toString(),
@@ -114,15 +158,15 @@ class LoginPage extends StatelessWidget {
                   BlocBuilder(
                     bloc: loginBloc,
                     builder: (context, state) {
-                      if (state is LoginInitial) {
-                        return const Center(
-                          child: Text(
-                            AppStrings.forgetPass,
-                            style: TextStyle(color: ColorManager.txtColor),
-                          ),
-                        );
+                      if (state is LoginLoadingState) {
+                        return Container();
                       }
-                      return Container();
+                      return const Center(
+                        child: Text(
+                          AppStrings.forgetPass,
+                          style: TextStyle(color: ColorManager.txtColor),
+                        ),
+                      );
                     },
                   ),
                   const Padding(

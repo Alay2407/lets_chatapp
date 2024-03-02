@@ -82,13 +82,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     IconButton(
                         onPressed: () {
                           _prefs.deleteValues(key: "token");
+                          _prefs.prefs.clear();
                           // Navigator.pushNamedAndRemoveUntil(
                           //   context,
                           //   AppRoutes.onBoarding,
                           //   (route) => route.settings.name ==   AppRoutes.setting,
                           // );
+
                           Navigator.of(context,rootNavigator: true)
-                              .pushNamedAndRemoveUntil(AppRoutes.login, (Route<dynamic> route) => false);
+                              .pushReplacementNamed(AppRoutes.login);
                         },
                         icon: const Icon(
                           Icons.logout,

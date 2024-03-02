@@ -4,7 +4,6 @@ import 'package:lets_chatapp/data/Model/authModel/signup_response.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import '../../Model/authModel/signup_request.dart';
-
 part 'api_service.g.dart';
 
 @RestApi(baseUrl: "https://stage-ultro-chat-node.onrender.com")
@@ -17,7 +16,7 @@ abstract class RetrofitClient {
   Future<SignupResponse> signup(@Body() SignupRequest signupRequest);
 
   @POST("/v1/auth/login")
-  Future<HttpResponse> login(@Body() LoginRequest loginRequest);
+  Future<HttpResponse<LoginResponse>> login(@Body() LoginRequest loginRequest);
 
 }
 

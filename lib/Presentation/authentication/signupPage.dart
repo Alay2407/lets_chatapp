@@ -10,6 +10,7 @@ import 'package:lets_chatapp/getit_injector.dart';
 
 import '../../constants/AppRoutes.dart';
 import '../../domain/bloc/auth/signup_bloc/signup_bloc.dart';
+import '../widgets/snackbar.dart';
 
 class SignupPage extends StatelessWidget {
   SignupPage({super.key});
@@ -39,9 +40,21 @@ class SignupPage extends StatelessWidget {
       listener: (context, state) {
         if (state is SignupLoadingState) {
           const CircularProgressIndicator();
-        }
-        if (state is SignupFinishedState) {
-          Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreen);
+        } else if (state is SignupFinishedState) {
+          Navigator.of(context).pushReplacementNamed(
+            AppRoutes.homeScreen,
+          );
+          showSnackbar(
+            color: ColorManager.darkGrey,
+            context: context,
+            message: state.signupResponse!.msg.toString(),
+          );
+        } else if (state is SignupErrorState) {
+          showSnackbar(
+            color: ColorManager.darkGrey,
+            context: context,
+            message: state.message.toString(),
+          );
         }
       },
       child: Scaffold(
@@ -86,8 +99,7 @@ class SignupPage extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               color: ColorManager.lightgrey,
                             ),
-                          ),
-                        ),
+                          ),),
                         Expanded(
                           child: Divider(),
                         ),
@@ -147,7 +159,10 @@ class SignupPage extends StatelessWidget {
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'required';
-                              } else if (value.length < 6) {
+                              } else if (value.length < 6 || !RegExp(r'[!@#%^&*(),.?":{}|<>]').hasMatch(value)) {
+                                if (!RegExp(r'[!@#%^&*(),.?":{}|<>]').hasMatch(value)) {
+                                  return 'Password need one special charactor';
+                                }
                                 return 'Password must be at least 6 characters long';
                               }
                               return null;
