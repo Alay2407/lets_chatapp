@@ -6,5 +6,6 @@ class AppRoutes{
   static const homeScreen = "/homescreen";
   static const chatScreen = "/chatscreen";
   static const searchScreen = "/searchscreen";
+  static const changePassScreen = "/changePassScreen";
 
 }

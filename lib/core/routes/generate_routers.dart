@@ -8,6 +8,7 @@ import 'package:lets_chatapp/Presentation/screen/message_screen.dart';
 import 'package:lets_chatapp/Presentation/screen/searchUser_Screen.dart';
 import 'package:lets_chatapp/Presentation/screen/settings_screen.dart';
 
+import '../../Presentation/authentication/changePassPage.dart';
 import '../../constants/AppRoutes.dart';
 
 Route<dynamic> onGenerate(RouteSettings settings) {
@@ -26,6 +27,8 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => ChatScreen());
     case AppRoutes.searchScreen:
       return MaterialPageRoute(builder: (context) => SearchUserScreen());
+    case AppRoutes.changePassScreen:
+      return MaterialPageRoute(builder: (context) => ChangePassPage());
     default:
       return MaterialPageRoute(builder: (context) => LoginPage());
   }

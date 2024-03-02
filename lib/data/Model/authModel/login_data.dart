@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'login_data.g.dart';
 @JsonSerializable()
 class LoginData {
-  String? sId;
+  String? id;
   String? name;
   String? email;
   bool? isDeleted;
@@ -13,7 +13,8 @@ class LoginData {
   String? profilePic;
 
   LoginData(
-      {this.sId,
+
+      { this.id,
         this.name,
         this.email,
         this.isDeleted,

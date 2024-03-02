@@ -17,6 +17,11 @@ class AppStrings {
   static const String contacts = "Contacts";
   static const String settings = "Settings";
   static const String recent = "Recent";
+  static const String currentPassword = "Current Password";
+  static const String newPassword = "New Password";
+  static const String changePassword = "Change Password";
+  static const String save = "Save";
+
 }
 
 

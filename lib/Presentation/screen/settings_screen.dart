@@ -18,7 +18,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final _prefs = locator.get<SharedPreferenceHelper>();
   final List<String> names = [
-    'John',
+    'Change Password',
     'Jane',
     'Michael',
     'Emily',
@@ -89,8 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           //   (route) => route.settings.name ==   AppRoutes.setting,
                           // );
 
-                          Navigator.of(context,rootNavigator: true)
-                              .pushReplacementNamed(AppRoutes.login);
+                          Navigator.of(context, rootNavigator: true).pushReplacementNamed(AppRoutes.login);
                         },
                         icon: const Icon(
                           Icons.logout,
@@ -130,15 +129,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       const SizedBox(
                         height: 24,
                       ),
-                      ListTile(
+                      const ListTile(
                         leading: CircleAvatar(
                           radius: 25,
                         ),
                         title: Text(
-                          names[0],
+                          'JOhn',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        subtitle: Text(names[0]),
+                        subtitle: Text('JOhn'),
                       ),
                       // SizedBox(
                       //   height: 14,
@@ -146,7 +145,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Divider(),
                       Expanded(
                         child: ListView.builder(
-                          padding: EdgeInsets.all(0),
+                          padding: const EdgeInsets.all(0),
                           // physics: NeverScrollableScrollPhysics(),
                           itemCount: images.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -154,20 +153,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             return Column(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(bottom: 15),
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                      child: SvgPicture.asset(svgImg[index]),
-                                      radius: 24,
-                                      backgroundColor: ColorManager.circularBack,
-                                    ),
-                                    title: Text(
-                                      names[index],
-                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                                    ),
-                                    subtitle: Text(
-                                      names[index],
-                                      style: TextStyle(color: ColorManager.subTitle.withOpacity(0.39)),
+                                  padding: const EdgeInsets.only(bottom: 15),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (index == 0) {
+
+                                        Navigator.of(context,rootNavigator: true).pushNamed(AppRoutes.changePassScreen);
+                                      }
+                                    },
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        child: SvgPicture.asset(svgImg[index]),
+                                        radius: 24,
+                                        backgroundColor: ColorManager.circularBack,
+                                      ),
+                                      title: Text(
+                                        names[index],
+                                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                      ),
+                                      subtitle: Text(
+                                        names[index],
+                                        style: TextStyle(color: ColorManager.subTitle.withOpacity(0.39)),
+                                      ),
                                     ),
                                   ),
                                 )

@@ -16,7 +16,7 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginUseCase loginUseCase;
-
+  final sharedPrefLocator = locator.get<SharedPreferenceHelper>();
   LoginBloc(this.loginUseCase) : super(LoginInitial()) {
     on<LoginUser>((event, emit) async {
       emit(LoginLoadingState());
@@ -30,6 +30,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         print('sdfsfs');
         print('data is ==>  ${data.email}');
         print('name is ==>  ${data.name}');
+
+        await sharedPrefLocator.setValues(
+          key: 'id',
+          value: data.id.toString(),
+        );
 
         emit(LoginFinishedState(data));
       } on DioException catch (e) {
