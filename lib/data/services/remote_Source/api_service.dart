@@ -14,16 +14,11 @@ abstract class RetrofitClient {
 
   factory RetrofitClient(Dio dio, {String baseUrl}) = _RetrofitClient;
 
-
   @POST("/v1/auth/register")
   Future<SignupResponse> signup(@Body() SignupRequest signupRequest);
 
   @POST("/v1/auth/login")
   Future<HttpResponse<LoginResponse>> login(@Body() LoginRequest loginRequest);
-  //
-  // @PUT("/v1/user/change-password/{id}")
-  // Future<HttpResponse<LoginResponse>> changePassword(@Path("id") String id, @Body() ChangepassRequest changepassRequest);
-
 
 @PUT("/v1/user/change-password")
 Future<HttpResponse<LoginResponse>> changePassword(@Body() ChangepassRequest changepassRequest);

@@ -1,13 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:lets_chatapp/data/Model/authModel/login_data.dart';
-import 'package:lets_chatapp/data/Model/authModel/login_response.dart';
 import 'package:lets_chatapp/domain/usecases/login_usecase.dart';
 import 'package:meta/meta.dart';
-import 'package:retrofit/dio.dart';
 import 'package:dio/dio.dart';
 
 import '../../../../core/shared_preferences/SharedPreferenceHelper.dart';
-import '../../../../data/services/AppException.dart';
 import '../../../../getit_injector.dart';
 
 part 'login_event.dart';
