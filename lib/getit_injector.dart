@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:lets_chatapp/data/repository_impl/changepass_repository_impl.dart';
+import 'package:lets_chatapp/data/repository_impl/authRepository_impl.dart';
 import 'package:lets_chatapp/domain/bloc/auth/change_pass/changepass_bloc.dart';
 import 'package:lets_chatapp/domain/bloc/auth/login_bloc/login_bloc.dart';
 import 'package:lets_chatapp/domain/bloc/auth/signup_bloc/signup_bloc.dart';
@@ -8,8 +8,6 @@ import 'package:lets_chatapp/domain/usecases/login_usecase.dart';
 import 'package:lets_chatapp/domain/usecases/signup_usecase.dart';
 import 'package:dio/dio.dart';
 import 'core/shared_preferences/SharedPreferenceHelper.dart';
-import 'data/repository_impl/login_repository_impl.dart';
-import 'data/repository_impl/singup_repository_impl.dart';
 import 'data/services/remote_Source/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,33 +33,25 @@ void init() async {
   );
 
   //Repository
-  locator.registerLazySingleton<SignupRepositoryImpl>(
-    () => SignupRepositoryImpl(),
-  );
-  locator.registerLazySingleton<LoginRepositoryImpl>(
-    () => LoginRepositoryImpl(),
+
+  locator.registerLazySingleton<AuthRepositoryimpl>(
+    () => AuthRepositoryimpl(),
   );
 
-  locator.registerLazySingleton<ChangepassRepositoryImpl>(
-    () => ChangepassRepositoryImpl(),
-  );
-
-  //usecases
   locator.registerLazySingleton<SignupUsecase>(
     () => SignupUsecase(
-      locator<SignupRepositoryImpl>(),
+      locator<AuthRepositoryimpl>(),
     ),
   );
-
   locator.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(
-      locator<LoginRepositoryImpl>(),
+      locator<AuthRepositoryimpl>(),
     ),
   );
 
   locator.registerLazySingleton<ChangePassUsecase>(
     () => ChangePassUsecase(
-      locator<ChangepassRepositoryImpl>(),
+      locator<AuthRepositoryimpl>(),
     ),
   );
 
