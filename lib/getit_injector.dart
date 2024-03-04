@@ -1,8 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:lets_chatapp/data/repository_impl/authRepository_impl.dart';
+import 'package:lets_chatapp/data/repository_impl/getAllChatRepositoryImpl.dart';
 import 'package:lets_chatapp/domain/bloc/auth/change_pass/changepass_bloc.dart';
 import 'package:lets_chatapp/domain/bloc/auth/login_bloc/login_bloc.dart';
 import 'package:lets_chatapp/domain/bloc/auth/signup_bloc/signup_bloc.dart';
+import 'package:lets_chatapp/domain/bloc/chat/getAllChat/get_all_chat_cubit.dart';
 import 'package:lets_chatapp/domain/usecases/change_usecase.dart';
 import 'package:lets_chatapp/domain/usecases/login_usecase.dart';
 import 'package:lets_chatapp/domain/usecases/signup_usecase.dart';
@@ -32,6 +34,9 @@ void init() async {
     ),
   );
 
+  locator.registerFactory(() => GetAllChatCubit(
+        locator<GetAllChatRepositoryImpl>(),
+      ));
   //Repository
 
   locator.registerLazySingleton<AuthRepositoryimpl>(
@@ -53,6 +58,10 @@ void init() async {
     () => ChangePassUsecase(
       locator<AuthRepositoryimpl>(),
     ),
+  );
+
+  locator.registerLazySingleton<GetAllChatRepositoryImpl>(
+    () => GetAllChatRepositoryImpl(),
   );
 
   //shared Preference

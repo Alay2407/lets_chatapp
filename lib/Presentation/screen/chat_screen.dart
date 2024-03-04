@@ -6,7 +6,9 @@ import '../../constants/strings.dart';
 import '../../data/Model/ChatMessage.dart';
 
 class ChatScreen extends StatelessWidget {
-  ChatScreen({super.key});
+  ChatScreen({super.key,this.name});
+
+  final String? name;
 
   List<ChatMessage> messages = [
     ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
@@ -72,9 +74,9 @@ class ChatScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  title: const Text(
-                    'John',
-                    style: TextStyle(
+                  title: Text(
+                    name.toString(),
+                    style: const TextStyle(
                       color: ColorManager.chatName,
                       fontWeight: FontWeight.bold,
                     ),

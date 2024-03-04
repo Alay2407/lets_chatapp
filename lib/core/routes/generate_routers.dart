@@ -24,7 +24,8 @@ Route<dynamic> onGenerate(RouteSettings settings) {
     case AppRoutes.homeScreen:
       return MaterialPageRoute(builder: (context) => HomeScreen());
     case AppRoutes.chatScreen:
-      return MaterialPageRoute(builder: (context) => ChatScreen());
+      final String? chatName = settings.arguments as String?;
+      return MaterialPageRoute(builder: (context) => ChatScreen(name: chatName,));
     case AppRoutes.searchScreen:
       return MaterialPageRoute(builder: (context) => SearchUserScreen());
     case AppRoutes.changePassScreen:

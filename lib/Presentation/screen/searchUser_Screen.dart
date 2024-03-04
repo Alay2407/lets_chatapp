@@ -13,18 +13,8 @@ class SearchUserScreen extends StatefulWidget {
 }
 
 class _SearchUserScreenState extends State<SearchUserScreen> {
+  ///Initially search query is empty
   String _searchQuery = '';
-
-  // List<String> _data = [
-  //   'Apple',
-  //   'Banana',
-  //   'Orange',
-  //   'Mango',
-  //   'Pineapple',
-  //   'Grapes',
-  //   'Watermelon',
-  // ];
-
   final List<String> names = [
     'John',
     'Jane',
@@ -42,16 +32,27 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
   ];
 
   final String subTitle = "How are you today?";
+
+  ///Intially this is a empty List if math than Add inside list here and show on Ui
   List<String> _searchResults = [];
 
+  ///this function call update data
   void _search() {
     _searchResults.clear();
     if (_searchQuery.isNotEmpty) {
+      ///show if and only first latter match from the list
       names.forEach((item) {
-        if (item.toLowerCase().contains(_searchQuery.toLowerCase())) {
+        if (item.toLowerCase().startsWith(_searchQuery.toLowerCase())) {
           _searchResults.add(item);
         }
       });
+
+      ///show if any later inside match from the list
+      // names.forEach((item) {
+      //   if (item.toLowerCase().contains(_searchQuery.toLowerCase())) {
+      //     _searchResults.add(item);
+      //   }
+      // });
     }
   }
 
@@ -120,7 +121,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                   visible: _searchResults == 0 ? false : true,
                   child: const Text(
                     'People',
-                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
               ),

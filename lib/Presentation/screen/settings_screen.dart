@@ -6,7 +6,6 @@ import '../../core/colors/colors.dart';
 import '../../constants/strings.dart';
 import '../../core/shared_preferences/SharedPreferenceHelper.dart';
 import '../../getit_injector.dart';
-import '../widgets/homescreen_header.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -83,13 +82,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         onPressed: () {
                           _prefs.deleteValues(key: "token");
                           _prefs.prefs.clear();
-                          // Navigator.pushNamedAndRemoveUntil(
-                          //   context,
-                          //   AppRoutes.onBoarding,
-                          //   (route) => route.settings.name ==   AppRoutes.setting,
-                          // );
-
-                          Navigator.of(context, rootNavigator: true).pushReplacementNamed(AppRoutes.login);
+                          Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+                            AppRoutes.login,
+                            (route) => false,
+                          );
                         },
                         icon: const Icon(
                           Icons.logout,
@@ -149,7 +145,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           // physics: NeverScrollableScrollPhysics(),
                           itemCount: images.length,
                           itemBuilder: (BuildContext context, int index) {
-                            final item = names[index];
+                            // final item = names[index];
                             return Column(
                               children: [
                                 Padding(
@@ -157,15 +153,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   child: GestureDetector(
                                     onTap: () {
                                       if (index == 0) {
-
-                                        Navigator.of(context,rootNavigator: true).pushNamed(AppRoutes.changePassScreen);
+                                        Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.changePassScreen);
                                       }
                                     },
                                     child: ListTile(
                                       leading: CircleAvatar(
-                                        child: SvgPicture.asset(svgImg[index]),
                                         radius: 24,
                                         backgroundColor: ColorManager.circularBack,
+                                        child: SvgPicture.asset(
+                                          svgImg[index],
+                                          color: ColorManager.dark,
+                                        ),
                                       ),
                                       title: Text(
                                         names[index],

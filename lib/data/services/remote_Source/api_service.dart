@@ -5,6 +5,7 @@ import 'package:lets_chatapp/data/Model/authModel/signup_response.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import '../../Model/authModel/signup_request.dart';
+import '../../Model/chat/getAll_chat.dart';
 
 part 'api_service.g.dart';
 
@@ -20,7 +21,9 @@ abstract class RetrofitClient {
   @POST("/v1/auth/login")
   Future<HttpResponse<LoginResponse>> login(@Body() LoginRequest loginRequest);
 
-@PUT("/v1/user/change-password")
-Future<HttpResponse<LoginResponse>> changePassword(@Body() ChangepassRequest changepassRequest);
+  @PUT("/v1/user/change-password")
+  Future<HttpResponse<LoginResponse>> changePassword(@Body() ChangepassRequest changepassRequest);
 
+  @GET("/v1/chat/all-chats?page=1&limit=10")
+  Future<HttpResponse<GetAllChat>> getAllChat();
 }
