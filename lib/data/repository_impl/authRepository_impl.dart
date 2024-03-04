@@ -47,6 +47,8 @@ class AuthRepositoryimpl extends AuthRepository {
       );
 
       print("status code is sdf ==> ${response.response.statusCode}");
+      print("Response statusMessagfe is ==> ${response.response.statusMessage}");
+      print("Data Status Message is ==> ${response.data.msg}");
       print("data is sdf ==> ${response.data.data!.name}");
       print("data is sdf ==> ${response.response.statusMessage}");
       return response.data.data!;
@@ -64,7 +66,6 @@ class AuthRepositoryimpl extends AuthRepository {
     //   // throw AppException('Login failed: ${response.response.statusCode}');
     //   return response.data.data!;
     // }
-
     // throw AppException('Somethinf wjw');
     return response.data.data!;
   }

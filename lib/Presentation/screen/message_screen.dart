@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:lets_chatapp/Presentation/screen/chat_screen.dart';
 import 'package:lets_chatapp/Presentation/widgets/homescreen_header.dart';
 import 'package:lets_chatapp/Presentation/widgets/snackbar.dart';
 import 'package:lets_chatapp/constants/strings.dart';
@@ -16,9 +15,6 @@ import 'package:lets_chatapp/getit_injector.dart';
 import '../../constants/AppRoutes.dart';
 import '../../core/colors/colors.dart';
 import 'package:flutter_slidable/src/slidable.dart';
-import 'package:dio/dio.dart';
-import '../../data/services/AppInterceptor.dart';
-import '../../data/services/remote_Source/api_service.dart';
 
 class MessageScreen extends StatefulWidget {
   MessageScreen({super.key});

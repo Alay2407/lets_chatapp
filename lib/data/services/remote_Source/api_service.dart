@@ -2,6 +2,7 @@ import 'package:lets_chatapp/data/Model/authModel/changepass_request.dart';
 import 'package:lets_chatapp/data/Model/authModel/login_request.dart';
 import 'package:lets_chatapp/data/Model/authModel/login_response.dart';
 import 'package:lets_chatapp/data/Model/authModel/signup_response.dart';
+import 'package:lets_chatapp/data/Model/user/searchUser/searchUserModel.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import '../../Model/authModel/signup_request.dart';
@@ -26,4 +27,8 @@ abstract class RetrofitClient {
 
   @GET("/v1/chat/all-chats?page=1&limit=10")
   Future<HttpResponse<GetAllChat>> getAllChat();
+
+  @GET("/v1/user/get-by-name/{name}?page=1&limit=20")
+  Future<HttpResponse<SearchUserModel>> searchUser(@Path('name') String name);
+
 }
