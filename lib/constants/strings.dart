@@ -22,6 +22,23 @@ class AppStrings {
   static const String changePassword = "Change Password";
   static const String save = "Save";
 
+
+
+  // error handler
+  static const String success = "success";
+  static const String badRequestError = "bad Request";
+  static const String noContent = "no_content";
+  static const String forbiddenError = "forbidden_error";
+  static const String unauthorizedError = "UNAUTHORIZED: Invalid Input Data";
+  static const String notFoundError = "ERROR: Not Found";
+  static const String conflictError = "conflict_error";
+  static const String internalServerError = "internal_server_error";
+  static const String unknownError = "unknown_error";
+  static const String timeoutError = "timeout_error";
+  static const String defaultError = "Error In Fetching Data";
+  static const String cacheError = "cache_error";
+  static const String noInternetError = "Please Check Your Internet Connection";
+
 }
 
 

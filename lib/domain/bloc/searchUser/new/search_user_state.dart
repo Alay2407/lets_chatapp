@@ -5,6 +5,7 @@ abstract class SearchUserState {}
 
 class SearchUserInitial extends SearchUserState {}
 
+
 class SearchUserLoadingState extends SearchUserState {}
 
 class SearchUserFinishedState extends SearchUserState {

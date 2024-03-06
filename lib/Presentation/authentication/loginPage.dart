@@ -103,11 +103,11 @@ class LoginPage extends StatelessWidget {
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'required';
-                              } else if (value.length < 6 || !RegExp(r'[!@#%^&*(),.?":{}|<>]').hasMatch(value)) {
+                              } else if (value.length < 8 || !RegExp(r'[!@#%^&*(),.?":{}|<>]').hasMatch(value)) {
                                 if (!RegExp(r'[!@#%^&*(),.?":{}|<>]').hasMatch(value)) {
                                   return 'Password need one special charactor';
                                 }
-                                return 'Password must be at least 6 characters long';
+                                return 'Password must be at least 8 characters long';
                               }
                               return null;
                             },

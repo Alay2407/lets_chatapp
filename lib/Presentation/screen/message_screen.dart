@@ -272,7 +272,7 @@ class _MessageScreenState extends State<MessageScreen> {
       ),
     );
   }
-  
+
   String formatMessageTime(DateTime messageTime) {
     // Get current date
     DateTime now = DateTime.now();
@@ -303,5 +303,4 @@ class _MessageScreenState extends State<MessageScreen> {
       return DateFormat('dd/MM/yyyy').format(messageTime); // Return date
     }
   }
-
 }

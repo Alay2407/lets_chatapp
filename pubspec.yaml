@@ -47,6 +47,8 @@ dependencies:
   intl: ^0.17.0
   timezone: ^0.7.0
   web_socket_channel:
+  equatable:
+  internet_connection_checker: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:

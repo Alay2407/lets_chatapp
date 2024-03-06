@@ -4,9 +4,9 @@ import 'package:lets_chatapp/Presentation/authentication/signupPage.dart';
 import 'package:lets_chatapp/Presentation/authentication/welcomePage.dart';
 import 'package:lets_chatapp/Presentation/screen/chat_screen.dart';
 import 'package:lets_chatapp/Presentation/screen/home_Screen.dart';
-import 'package:lets_chatapp/Presentation/screen/message_screen.dart';
 import 'package:lets_chatapp/Presentation/screen/searchUser_Screen.dart';
 import 'package:lets_chatapp/Presentation/screen/settings_screen.dart';
+import 'package:lets_chatapp/data/Model/user/searchUser/searchUserDataModel.dart';
 
 import '../../Presentation/authentication/changePassPage.dart';
 import '../../constants/AppRoutes.dart';
@@ -24,8 +24,12 @@ Route<dynamic> onGenerate(RouteSettings settings) {
     case AppRoutes.homeScreen:
       return MaterialPageRoute(builder: (context) => HomeScreen());
     case AppRoutes.chatScreen:
-      final String? chatName = settings.arguments as String?;
-      return MaterialPageRoute(builder: (context) => ChatScreen(name: chatName,));
+      // final String? chatName = settings.arguments as String?;
+      final SearchUserData? searchUserData = settings.arguments as SearchUserData?;
+      return MaterialPageRoute(
+          builder: (context) => ChatScreen(
+              // name: chatName,
+              searchUserData: searchUserData));
     case AppRoutes.searchScreen:
       return MaterialPageRoute(builder: (context) => SearchUserScreen());
     case AppRoutes.changePassScreen:

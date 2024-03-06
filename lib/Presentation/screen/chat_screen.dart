@@ -1,14 +1,19 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../core/colors/colors.dart';
 import '../../constants/strings.dart';
 import '../../data/Model/ChatMessage.dart';
+import '../../data/Model/user/searchUser/searchUserDataModel.dart';
 
 class ChatScreen extends StatelessWidget {
-  ChatScreen({super.key,this.name});
+  ChatScreen({super.key /*,this.name*/, this.searchUserData});
 
-  final String? name;
+  // final String? name;
+  SearchUserData? searchUserData;
 
   List<ChatMessage> messages = [
     ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
@@ -35,6 +40,11 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final channel = WebSocketChannel.connect(Uri.parse('https://stage-ultro-chat-node.onrender.com'));
+    // channel.stream.listen((event) {
+    //   print(event.toString());
+    // });
+
     return Scaffold(
       backgroundColor: ColorManager.white,
       appBar: PreferredSize(
@@ -75,7 +85,7 @@ class ChatScreen extends StatelessWidget {
                     ],
                   ),
                   title: Text(
-                    name.toString(),
+                    searchUserData!.name.toString(),
                     style: const TextStyle(
                       color: ColorManager.chatName,
                       fontWeight: FontWeight.bold,
@@ -113,7 +123,7 @@ class ChatScreen extends StatelessWidget {
             // physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return Container(
-                padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+                padding: const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
                 child: Align(
                   alignment: (messages[index].messageType == "receiver" ? Alignment.topLeft : Alignment.topRight),
                   child: Container(
@@ -196,14 +206,12 @@ class ChatScreen extends StatelessWidget {
                       color: ColorManager.dark,
                     ),
                   ),
-                  SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: SvgPicture.asset(
-                      SvgString.microphone,
-                      color: ColorManager.dark,
-                    ),
-                  ),
+                  const SizedBox(height: 24, width: 24, child: Icon(Icons.send)
+                      // SvgPicture.asset(
+                      //   SvgString.microphone,
+                      //   color: ColorManager.dark,
+                      // ),
+                      ),
                 ],
               ),
             ),

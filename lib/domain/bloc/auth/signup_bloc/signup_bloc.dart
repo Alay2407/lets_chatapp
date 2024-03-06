@@ -7,6 +7,8 @@ import 'package:lets_chatapp/domain/usecases/signup_usecase.dart';
 import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
 
+import '../../../../core/error/error_handler.dart';
+
 part 'signup_event.dart';
 
 part 'signup_state.dart';
@@ -33,10 +35,16 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       emit(SignupFinishedState(data));
 
       // return data;
-    } on DioException catch (e) {
+    }
+
+    on DioException catch (e) {
       print("Response message is ${e.response!.data.toString()}");
       print("Response status is ${e.response!.statusCode.toString()}");
       emit(SignupErrorState(e.response!.data['message']));
     }
+
+    // catch (e) {
+    //   emit(SignupErrorState(ErrorHandler.handle(e).failure.message));
+    // }
   }
 }
