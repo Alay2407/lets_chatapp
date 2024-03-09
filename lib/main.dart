@@ -7,7 +7,6 @@ import 'package:lets_chatapp/core/routes/generate_routers.dart';
 import 'package:lets_chatapp/domain/bloc/auth/login_bloc/login_bloc.dart';
 import 'package:lets_chatapp/domain/bloc/auth/signup_bloc/signup_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'core/shared_preferences/SharedPreferenceHelper.dart';
 import 'getit_injector.dart' as di;
 import 'getit_injector.dart';

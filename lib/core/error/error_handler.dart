@@ -43,7 +43,7 @@ class ErrorHandler implements Exception {
       switch (error.response?.statusCode) {
         case ResponseCode.BAD_REQUEST:
           List<dynamic> messages = error.response!.data['message'];
-print('Error msg is ===> ${messages.first['msg']}');
+          print('Error msg is ===> ${messages.first['msg']}');
           return DataSource.BAD_REQUEST.getFailure(messages.first['msg']);
         case ResponseCode.FORBIDDEN:
           return DataSource.FORBIDDEN.getFailure(error.response!.data['message']);

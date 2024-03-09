@@ -29,16 +29,16 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
         emit(SearchUserFinishedState(data.data!));
       }
 
-      on DioException catch (e) {
-        print('Chat Status Code: ${e.response!.statusCode}');
-        print('Chat Response Message: ${e.response!.statusMessage}');
-        searchResults.clear();
-        emit(SearchUserStateErrorState(e.response!.data['message']));
-      }
-
-      // catch (e) {
-      //   emit(SearchUserStateErrorState(ErrorHandler.handle(e).failure.message));
+      // on DioException catch (e) {
+      //   print('Chat Status Code: ${e.response!.statusCode}');
+      //   print('Chat Response Message: ${e.response!.statusMessage}');
+      //   searchResults.clear();
+      //   emit(SearchUserStateErrorState(e.response!.data['message']));
       // }
+
+      catch (e) {
+        emit(SearchUserStateErrorState(ErrorHandler.handle(e).failure.message));
+      }
     });
   }
 }

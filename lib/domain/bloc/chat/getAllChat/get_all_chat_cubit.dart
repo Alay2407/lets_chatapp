@@ -5,6 +5,8 @@ import 'package:meta/meta.dart';
 
 import 'package:dio/dio.dart';
 
+import '../../../../core/error/error_handler.dart';
+
 part 'get_all_chat_state.dart';
 
 class GetAllChatCubit extends Cubit<GetAllChatState> {
@@ -20,19 +22,23 @@ class GetAllChatCubit extends Cubit<GetAllChatState> {
       // print('Chats Userid is==>> ${data.data!.chats![0].userID}');
       emit(GetAllChatFinishedState(data));
       // emit(ChangepassFinishedState(data));
-    } on DioException catch (e) {
-      print('Chat Status Code: ${e.response!.statusCode}');
-      print('Chat Response Message: ${e.response!.statusMessage}');
-      emit(GetAllChatErrorState(e.response!.data['message']));
-
-      // emit(ChangepassErrorState(e.response!.statusMessage));
-      // print('Response error: ${e.sta}');
     }
 
-    // catch(e){
+    // on DioException catch (e) {
+    //   print('Chat Status Code: ${e.response!.statusCode}');
+    //   print('Chat Response Message: ${e.response!.statusMessage}');
+    //   emit(GetAllChatErrorState(e.response!.data['message']));
     //
-    //   emit(GetAllChatErrorState(ErrorHandler.handle(e).failure.message));
-    //
+    //   // emit(ChangepassErrorState(e.response!.statusMessage));
+    //   // print('Response error: ${e.sta}');
     // }
+
+    catch (e) {
+      emit(
+        GetAllChatErrorState(
+          ErrorHandler.handle(e).failure.message,
+        ),
+      );
+    }
   }
 }

@@ -38,17 +38,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginFinishedState(data));
       }
 
-      on DioException catch (e) {
-        print('Api Status Code: ${e.response!.statusCode}');
-        print('Api Response Message: ${e.response!.statusMessage}');
-
-        emit(LoginErrorState(e.response!.data['message']));
-        // print('Response error: ${e.sta}');
-      }
-      // catch (e) {
-      //   print('Errpr handler ${ErrorHandler.handle(e).failure.message}');
-      //   emit(LoginErrorState(ErrorHandler.handle(e).failure.message.message));
+      // on DioException catch (e) {
+      //   print('Api Status Code: ${e.response!.statusCode}');
+      //   print('Api Response Message: ${e.response!.statusMessage}');
+      //
+      //   emit(LoginErrorState(e.response!.data['message']));
+      //   // print('Response error: ${e.sta}');
       // }
+      catch (e) {
+        print('Errpr handler ${ErrorHandler.handle(e).failure.message}');
+        emit(LoginErrorState(ErrorHandler.handle(e).failure.message));
+      }
     });
   }
 }

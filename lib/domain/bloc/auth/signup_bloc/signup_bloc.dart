@@ -37,14 +37,14 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       // return data;
     }
 
-    on DioException catch (e) {
-      print("Response message is ${e.response!.data.toString()}");
-      print("Response status is ${e.response!.statusCode.toString()}");
-      emit(SignupErrorState(e.response!.data['message']));
-    }
-
-    // catch (e) {
-    //   emit(SignupErrorState(ErrorHandler.handle(e).failure.message));
+    // on DioException catch (e) {
+    //   print("Response message is ${e.response!.data.toString()}");
+    //   print("Response status is ${e.response!.statusCode.toString()}");
+    //   emit(SignupErrorState(e.response!.data['message']));
     // }
+
+    catch (e) {
+      emit(SignupErrorState(ErrorHandler.handle(e).failure.message));
+    }
   }
 }

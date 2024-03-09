@@ -46,6 +46,10 @@ class AuthRepositoryimpl extends AuthRepository {
         value: response.data.accessToken.toString(),
       );
 
+      await sharedPrefLocator.setValues(
+        key: "refreshToken",
+        value: response.data.refreshToken.toString(),
+      );
       print("status code is sdf ==> ${response.response.statusCode}");
       print("Response statusMessagfe is ==> ${response.response.statusMessage}");
       print("Data Status Message is ==> ${response.data.msg}");
@@ -79,6 +83,7 @@ class AuthRepositoryimpl extends AuthRepository {
     print('Response is');
     if (response.data != null) {
       await sharedPrefLocator.setValues(key: 'token', value: response.accessToken.toString());
+      await sharedPrefLocator.setValues(key: "refreshToken", value: response.refreshToken.toString());
       return response;
     }
     return response;
