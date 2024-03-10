@@ -19,3 +19,8 @@ class SearchUserStateErrorState extends SearchUserState {
 
   SearchUserStateErrorState(this.message);
 }
+
+
+class ClearUserSearchState extends SearchUserState{
+
+}

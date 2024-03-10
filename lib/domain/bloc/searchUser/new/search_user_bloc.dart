@@ -40,5 +40,10 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
         emit(SearchUserStateErrorState(ErrorHandler.handle(e).failure.message));
       }
     });
+
+    on<ClearUserFromSearchtxt>((event, emit) {
+      searchResults.clear();
+      emit(ClearUserSearchState());
+    },);
   }
 }

@@ -7,7 +7,7 @@ import '../../core/shared_preferences/SharedPreferenceHelper.dart';
 
 class AppInterceptor extends Interceptor {
   final _prefs = locator.get<SharedPreferenceHelper>();
-  RetrofitClient retrofitClient = RetrofitClient(Dio());
+  RetrofitClient retrofitClient = locator<RetrofitClient>();
 
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
@@ -30,7 +30,7 @@ class AppInterceptor extends Interceptor {
         }
       } else {
         /// Token is still valid, use it for the request
-         print('Inside else part of TokenExpired');
+        print('Inside else part of TokenExpired');
         options.headers["Authorization"] = "Bearer $token";
       }
     }
@@ -42,11 +42,14 @@ class AppInterceptor extends Interceptor {
   bool _isTokenExpired(String token) {
     print('inside _isTokenExpired');
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    print(decodedToken);
     int expiryDateInSeconds = decodedToken['exp'];
     DateTime expiryDate = DateTime.fromMillisecondsSinceEpoch(expiryDateInSeconds * 1000);
 
-    print("boolen ${DateTime.now().isAfter(expiryDate)}");
-    return DateTime.now().isAfter(expiryDate);
+    DateTime indiaTime = expiryDate.add(const Duration(hours: 5, minutes: 30));
+    print("Expiry date is ===> $indiaTime");
+    print("boolean token is expired ===> ${DateTime.now().isAfter(indiaTime)}");
+    return DateTime.now().isAfter(indiaTime);
   }
 
   Future<String> _refreshToken() async {
@@ -58,7 +61,7 @@ class AppInterceptor extends Interceptor {
         refreshToken: refreshToken!,
       ),
     );
-    print("inside _Refresh print response ${response.data['accessToken']}");
+    print("Inside _Refresh print response ===> ${response.data['accessToken']}");
     return response.data['accessToken'];
   }
 }

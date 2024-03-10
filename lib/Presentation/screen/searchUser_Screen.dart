@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +20,7 @@ class SearchUserScreen extends StatefulWidget {
 }
 
 class _SearchUserScreenState extends State<SearchUserScreen> {
+  Timer? _debounce;
   final List<String> images = [
     'assets/images/img1.png',
     'assets/images/img2.png',
@@ -89,11 +92,17 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
             child: TextField(
               controller: _controller,
               onChanged: (value) {
-                // setState(() {
-                //   _searchQuery = value;
-                //   _search();
-                // });
-                searchUserBloc.add(FetchUsers(value));
+                _debounce?.cancel();
+                _debounce = Timer(Duration(milliseconds: 300), () {
+                  if (value.isEmpty) {
+                    // setState(() {
+                    //   searchUserBloc.searchResults.clear();
+                    // });
+                    searchUserBloc.add(ClearUserFromSearchtxt());
+                  } else {
+                    searchUserBloc.add(FetchUsers(value));
+                  }
+                });
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -102,10 +111,10 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
-                    setState(() {
-                      _controller.clear();
-                      searchUserBloc.searchResults.clear();
-                    });
+                    _controller.clear();
+                    searchUserBloc.add(
+                      ClearUserFromSearchtxt(),
+                    );
                   },
                 ),
                 // Add a search icon or button to the search bar
@@ -127,29 +136,36 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
             BlocBuilder(
               bloc: searchUserBloc,
               builder: (context, state) {
-                if (state is SearchUserInitial) {
-                  const Center(child: Text('Data not found'));
-                } else if (state is SearchUserLoadingState) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                if (state is SearchUserLoadingState) {
+                  return const Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
+                    ),
                   );
                 } else if (state is SearchUserFinishedState) {
                   return Expanded(
                     child: Column(
                       children: [
-                         searchUserBloc.searchResults.isEmpty?Container():const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 23, vertical: 15),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'People',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                        searchUserBloc.searchResults.isEmpty
+                            ? Container()
+                            : const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 23, vertical: 15),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    'People',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                         Expanded(
                           child: ListView.builder(
                             itemCount: state.searchUserList.length,
@@ -195,9 +211,28 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                     ),
                   );
                 } else if (state is SearchUserStateErrorState) {
-                  const Center(child: Text('Data not found'));
+                  return const Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text('Data not found'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return const Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text('Search User for chat'),
+                        ),
+                      ],
+                    ),
+                  );
                 }
-                return Container();
               },
             )
           ],

@@ -9,3 +9,7 @@ class FetchUsers extends SearchUserEvent{
 
    FetchUsers(this.name);
 }
+
+class ClearUserFromSearchtxt extends SearchUserEvent{
+
+}
