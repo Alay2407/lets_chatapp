@@ -18,3 +18,16 @@ class GetAllChatErrorState extends GetAllChatState {
 
   GetAllChatErrorState(this.message);
 }
+
+
+class GetSingleChatFinishedState extends GetAllChatState {
+  final GetSingleChat? getSingleChat;
+
+  GetSingleChatFinishedState(this.getSingleChat);
+}
+
+class GetSingleChatErrorState extends GetAllChatState {
+  final String? message;
+
+  GetSingleChatErrorState(this.message);
+}

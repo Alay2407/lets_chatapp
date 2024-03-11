@@ -93,11 +93,8 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
               controller: _controller,
               onChanged: (value) {
                 _debounce?.cancel();
-                _debounce = Timer(Duration(milliseconds: 300), () {
+                _debounce = Timer(const Duration(milliseconds: 300), () {
                   if (value.isEmpty) {
-                    // setState(() {
-                    //   searchUserBloc.searchResults.clear();
-                    // });
                     searchUserBloc.add(ClearUserFromSearchtxt());
                   } else {
                     searchUserBloc.add(FetchUsers(value));

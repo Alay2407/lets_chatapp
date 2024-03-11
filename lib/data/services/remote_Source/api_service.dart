@@ -8,13 +8,15 @@ import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import '../../Model/authModel/signup_request.dart';
 import '../../Model/chat/getAll_chat.dart';
+import '../../Model/chat/get_single_chat.dart';
+import '../../Model/message/send_message.dart';
+import '../../Model/message/send_message_body.dart';
 
 part 'api_service.g.dart';
 
 @RestApi(baseUrl: "https://stage-ultro-chat-node.onrender.com")
 abstract class RetrofitClient {
   static final RetrofitClient client = RetrofitClient(Dio());
-
 
   factory RetrofitClient(Dio dio, {String baseUrl}) = _RetrofitClient;
 
@@ -35,5 +37,12 @@ abstract class RetrofitClient {
 
   @POST("/v1/auth/refresh")
   Future<HttpResponse> refreshToken(@Body() RefreshTokenRequest refreshTokenRequest);
+
+
+  @POST("/v1/message/{receiverId}")
+  Future<HttpResponse<SendMessage>> sendMessage(@Path('receiverId') String receiverId, @Body() SendMessageBody sendMessageBody);
+
+  @GET("/v1/chat/{chatID}?page=1&limit=10")
+  Future<HttpResponse<GetSingleChat>> getSingleChat(@Path('chatID') String chatID);
 
 }

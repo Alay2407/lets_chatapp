@@ -1,4 +1,6 @@
 import 'dart:core';
+import 'package:lets_chatapp/Presentation/screen/chat_screen.dart';
+import 'package:lets_chatapp/data/Model/user/searchUser/searchUserDataModel.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -206,7 +208,20 @@ class _MessageScreenState extends State<MessageScreen> {
                                             child: InkWell(
                                               onTap: () {
                                                 // ChatScreen(name: chats[index].name.toString(),);
-                                                Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.chatScreen, arguments: chats[index].name);
+                                                // Navigator.of(context, rootNavigator: true).push(
+                                                //   MaterialPageRoute(
+                                                //     builder: (context) => ChatScreen(
+                                                //       searchUserData: SearchUserData(
+                                                //         email: chats[index].email,
+                                                //       ),
+                                                //     ),
+                                                //   ),
+                                                // );
+                                                print('Chat id is ====>  ${chats[index].chatID}');
+                                                print('Email id is ====>  ${chats[index].email}');
+
+                                                String? chatId = chats[index].chatID;
+                                                getAllChatCubit.getSingleChat(chatId!);
                                               },
                                               child: ListTile(
                                                   leading: CircleAvatar(
