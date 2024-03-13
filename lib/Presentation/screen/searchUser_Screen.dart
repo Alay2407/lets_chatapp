@@ -175,9 +175,19 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                                   print("User name is ==>  ${user[index].name}");
                                   print("User email is ==>  ${user[index].email}");
 
+                                  // Navigator.of(context, rootNavigator: true).pushNamed(
+                                  //   AppRoutes.chatScreen,
+                                  //   arguments: specificUser,
+                                  // );
+
+                                  Map<String, dynamic> arguments = {
+                                    'emailID': user[index].email,
+                                    'name': user[index].name,
+                                    'receiverId':user[index].id,
+                                  };
                                   Navigator.of(context, rootNavigator: true).pushNamed(
                                     AppRoutes.chatScreen,
-                                    arguments: specificUser,
+                                    arguments: arguments
                                   );
                                 },
                                 child: ListTile(

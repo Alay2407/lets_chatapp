@@ -3,20 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lets_chatapp/data/Model/message/send_message_body.dart';
 import 'package:lets_chatapp/domain/bloc/message/send_message_cubit.dart';
 
 import '../../core/colors/colors.dart';
 import '../../constants/strings.dart';
+import '../../data/Model/chat/get_single_chat_data.dart';
+import '../../data/Model/message/send_message_body.dart';
 import '../../data/Model/message/send_msg_data.dart';
-import '../../data/Model/user/searchUser/searchUserDataModel.dart';
+import '../../domain/bloc/chat/getAllChat/get_all_chat_cubit.dart';
 import '../../getit_injector.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({super.key /*,this.name*/, this.searchUserData});
+  ChatScreen({
+    super.key /*,this.name*/,
+    /*this.searchUserData*/ this.name,
+    this.emailId,
+    this.receiverId,
+    this.messagess,
+    this.chatId,
+  });
 
-  SearchUserData? searchUserData;
+  // SearchUserData? searchUserData;
+  String? name;
+  String? emailId;
+  String? receiverId;
+  String? chatId;
+  List<GetSingleChatData>? messagess;
+
+  // GetSingleChat? getSingleChat;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -25,33 +40,35 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   SendMessageCubit sendMessageCubit = locator<SendMessageCubit>();
   TextEditingController message = TextEditingController();
+  GetAllChatCubit getAllChatCubit = locator<GetAllChatCubit>();
 
-  late IO.Socket socket;
+  // late IO.Socket socket;
 
   @override
   void initState() {
     super.initState();
-    connectToServer();
+    // connectToServer();
+    messages = widget.messagess!;
   }
 
-  void connectToServer() {
-    // Connect to the Socket.IO server
-    socket = IO.io('https://stage-ultro-chat-node.onrender.com', <String, dynamic>{
-      'transports': ['websocket'],
-      'autoConnect': false,
-    });
-    socket.connect();
-    print(socket.connected);
-    print(socket.active);
-    // Listen for incoming chat messages
-    socket.on('chat_message', (data) {
-      setState(() {
-        messages.add(data);
-      });
-    });
-  }
+  // void connectToServer() {
+  //   // Connect to the Socket.IO server
+  //   socket = IO.io('https://stage-ultro-chat-node.onrender.com', <String, dynamic>{
+  //     'transports': ['websocket'],
+  //     'autoConnect': false,
+  //   });
+  //   socket.connect();
+  //   print(socket.connected);
+  //   print(socket.active);
+  //   // Listen for incoming chat messages
+  //   socket.on('chat_message', (data) {
+  //     setState(() {
+  //       messages.add(data);
+  //     });
+  //   });
+  // }
 
-  List<SendMsgData> messages = [];
+  List<GetSingleChatData> messages = [];
 
   // List<ChatMessage> messages = [
   //   ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
@@ -118,7 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ],
                   ),
                   title: Text(
-                    widget.searchUserData!.name.toString(),
+                    widget.name.toString(),
                     style: const TextStyle(
                       color: ColorManager.chatName,
                       fontWeight: FontWeight.bold,
@@ -147,173 +164,306 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
-      body: BlocListener(
-        bloc: sendMessageCubit,
-        listener: (context, state) {},
-        child: Stack(
-          children: <Widget>[
-            BlocBuilder(
-              bloc: sendMessageCubit,
-              builder: (context, state) {
-                return ListView.builder(
-                  itemCount: messages.length,
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  // physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-                      child: Align(
-                        alignment: (messages[index].senderId == widget.searchUserData!.id ? Alignment.topLeft : Alignment.topRight),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: messages[index].senderId == widget.searchUserData!.id
-                                ? const BorderRadius.only(
-                                    topRight: Radius.circular(20),
-                                    topLeft: Radius.circular(0),
-                                    bottomLeft: Radius.circular(20),
-                                    bottomRight: Radius.circular(20),
-                                  )
-                                : const BorderRadius.only(
-                                    topRight: Radius.circular(0),
-                                    topLeft: Radius.circular(20),
-                                    bottomLeft: Radius.circular(20),
-                                    bottomRight: Radius.circular(20),
-                                  ),
-                            color: (messages[index].senderId == widget.searchUserData!.id ? ColorManager.senderColor : ColorManager.reciverColor),
-                          ),
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            messages[index].message.toString(),
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: (messages[index].senderId == widget.searchUserData!.id ? ColorManager.dark : ColorManager.white),
+
+      body: Stack(
+        children: <Widget>[
+          ListView.builder(
+            // reverse: true,
+            itemCount: messages.length,
+            shrinkWrap: true,
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            // physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              print('Chat id  is===>   ${widget.chatId}');
+              return Container(
+                padding: const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 70),
+                child: Align(
+                  alignment: (messages[index].sender_id == widget.receiverId ? Alignment.topLeft : Alignment.topRight),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: messages[index].sender_id == widget.receiverId
+                          ? const BorderRadius.only(
+                              topRight: Radius.circular(20),
+                              topLeft: Radius.circular(0),
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
+                            )
+                          : const BorderRadius.only(
+                              topRight: Radius.circular(0),
+                              topLeft: Radius.circular(20),
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
                             ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-                // return ListView.builder(
-                //   itemCount: messages.length,
-                //   shrinkWrap: true,
-                //   padding: EdgeInsets.only(top: 10, bottom: 10),
-                //   // physics: NeverScrollableScrollPhysics(),
-                //   itemBuilder: (context, index) {
-                //     return Container(
-                //       padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-                //       child: Align(
-                //         alignment: (messages[index].messageType == "receiver" ? Alignment.topLeft : Alignment.topRight),
-                //         child: Container(
-                //           decoration: BoxDecoration(
-                //             borderRadius: messages[index].messageType == "receiver"
-                //                 ? const BorderRadius.only(
-                //                     topRight: Radius.circular(20),
-                //                     topLeft: Radius.circular(0),
-                //                     bottomLeft: Radius.circular(20),
-                //                     bottomRight: Radius.circular(20),
-                //                   )
-                //                 : const BorderRadius.only(
-                //                     topRight: Radius.circular(0),
-                //                     topLeft: Radius.circular(20),
-                //                     bottomLeft: Radius.circular(20),
-                //                     bottomRight: Radius.circular(20),
-                //                   ),
-                //             color: (messages[index].messageType == "receiver" ? ColorManager.senderColor : ColorManager.reciverColor),
-                //           ),
-                //           padding: const EdgeInsets.all(16),
-                //           child: Text(
-                //             messages[index].messageContent,
-                //             style: TextStyle(
-                //               fontSize: 15,
-                //               color: (messages[index].messageType == "receiver" ? ColorManager.dark : ColorManager.white),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // );
-              },
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                padding: const EdgeInsets.only(bottom: 10, top: 10),
-                height: 80,
-                width: double.infinity,
-                color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        height: 24,
-                        width: 24,
-                        child: SvgPicture.asset(
-                          SvgString.attachment,
-                          color: ColorManager.dark,
-                        ),
+                      color: (messages[index].sender_id == widget.receiverId ? ColorManager.senderColor : ColorManager.reciverColor),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      messages[index].message.toString(),
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: (messages[index].sender_id == widget.receiverId ? ColorManager.dark : ColorManager.white),
                       ),
                     ),
-                    SizedBox(
-                      width: 216,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: ColorManager.lightGray,
-                          borderRadius: BorderRadius.circular(10.0),
-                          // border: Border.all(color: ColorManager.dark)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              hintText: "Write message...",
-                              hintStyle: TextStyle(color: Colors.black54),
-                              border: InputBorder.none,
-                            ),
-                            controller: message,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
+                  ),
+                ),
+              );
+
+              // return ListView.builder(
+              //   itemCount: messages.length,
+              //   shrinkWrap: true,
+              //   padding: EdgeInsets.only(top: 10, bottom: 10),
+              //   // physics: NeverScrollableScrollPhysics(),
+              //   itemBuilder: (context, index) {
+              //     return Container(
+              //       padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+              //       child: Align(
+              //         alignment: (messages[index].messageType == "receiver" ? Alignment.topLeft : Alignment.topRight),
+              //         child: Container(
+              //           decoration: BoxDecoration(
+              //             borderRadius: messages[index].messageType == "receiver"
+              //                 ? const BorderRadius.only(
+              //                     topRight: Radius.circular(20),
+              //                     topLeft: Radius.circular(0),
+              //                     bottomLeft: Radius.circular(20),
+              //                     bottomRight: Radius.circular(20),
+              //                   )
+              //                 : const BorderRadius.only(
+              //                     topRight: Radius.circular(0),
+              //                     topLeft: Radius.circular(20),
+              //                     bottomLeft: Radius.circular(20),
+              //                     bottomRight: Radius.circular(20),
+              //                   ),
+              //             color: (messages[index].messageType == "receiver" ? ColorManager.senderColor : ColorManager.reciverColor),
+              //           ),
+              //           padding: const EdgeInsets.all(16),
+              //           child: Text(
+              //             messages[index].messageContent,
+              //             style: TextStyle(
+              //               fontSize: 15,
+              //               color: (messages[index].messageType == "receiver" ? ColorManager.dark : ColorManager.white),
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // );
+            },
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: const EdgeInsets.only(bottom: 10, top: 10),
+              height: 80,
+              width: double.infinity,
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
                       height: 24,
                       width: 24,
                       child: SvgPicture.asset(
-                        SvgString.camera,
+                        SvgString.attachment,
                         color: ColorManager.dark,
                       ),
                     ),
-                    GestureDetector(
-                      child: const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: Icon(
-                            Icons.send,
-                          )),
-                      onTap: () {
-                        sendMessageCubit.sendMessage(
-                          widget.searchUserData!.id!,
-                          SendMessageBody(message.text.toString()),
-                        );
-
-                        setState(() {
-                          messages.add(SendMsgData(message: message.text));
-                          message.clear();
-                        });
-                      },
+                  ),
+                  SizedBox(
+                    width: 216,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: ColorManager.lightGray,
+                        borderRadius: BorderRadius.circular(10.0),
+                        // border: Border.all(color: ColorManager.dark)
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            hintText: "Write message...",
+                            hintStyle: TextStyle(color: Colors.black54),
+                            border: InputBorder.none,
+                          ),
+                          controller: message,
+                        ),
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: SvgPicture.asset(
+                      SvgString.camera,
+                      color: ColorManager.dark,
+                    ),
+                  ),
+                  GestureDetector(
+                    child: const SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: Icon(
+                          Icons.send,
+                        )),
+                    onTap: () {
+                      sendMessageCubit.sendMessage(
+                        widget.receiverId!,
+                        SendMessageBody(message.text.toString()),
+                      );
+
+                      // setState(() {
+                      //   messages.add(SendMsgData(message: message.text));
+                      //   message.clear();
+                      // });
+                      //
+                      setState(() {
+                        messages.add(GetSingleChatData(message: message.text));
+                        message.clear();
+                      });
+                    },
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+
+      // body: Stack(
+      //   children: <Widget>[
+      //     BlocBuilder(
+      //       bloc: getAllChatCubit,
+      //       builder: (context, state) {
+      //          if(state is GetSingleChatFinishedState){
+      //            var data = state.getSingleChat!.data;
+      //            print('data is ${data![0].id}');
+      //            return ListView.builder(
+      //              itemCount: state.getSingleChat!.data!.length,
+      //              shrinkWrap: true,
+      //              padding: const EdgeInsets.only(top: 10, bottom: 10),
+      //              // physics: NeverScrollableScrollPhysics(),
+      //              itemBuilder: (context, index) {
+      //                return Container(
+      //                  padding: const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 70),
+      //                  child: Align(
+      //                    alignment: (data[index].receiver_id == widget.receiverId ? Alignment.topLeft : Alignment.topRight),
+      //                    child: Container(
+      //                      decoration: BoxDecoration(
+      //                        borderRadius:data[index].receiver_id == widget.receiverId
+      //                            ? const BorderRadius.only(
+      //                          topRight: Radius.circular(20),
+      //                          topLeft: Radius.circular(0),
+      //                          bottomLeft: Radius.circular(20),
+      //                          bottomRight: Radius.circular(20),
+      //                        )
+      //                            : const BorderRadius.only(
+      //                          topRight: Radius.circular(0),
+      //                          topLeft: Radius.circular(20),
+      //                          bottomLeft: Radius.circular(20),
+      //                          bottomRight: Radius.circular(20),
+      //                        ),
+      //                        color: (data[index].receiver_id == widget.receiverId ? ColorManager.senderColor : ColorManager.reciverColor),
+      //                      ),
+      //                      padding: const EdgeInsets.all(16),
+      //                      child: Text(
+      //                        data[index].message.toString(),
+      //                        style: TextStyle(
+      //                          fontSize: 15,
+      //                          color: (data[index].receiver_id == widget.receiverId ? ColorManager.dark : ColorManager.white),
+      //
+      //                        ),
+      //                      ),
+      //                    ),
+      //                  ),
+      //                );
+      //              },
+      //            );
+      //
+      //          }else{
+      //            return Container();
+      //          }
+      //       },
+      //     ),
+      //     Align(
+      //       alignment: Alignment.bottomCenter,
+      //       child: Container(
+      //         padding: const EdgeInsets.only(bottom: 10, top: 10),
+      //         height: 80,
+      //         width: double.infinity,
+      //         color: Colors.white,
+      //         child: Row(
+      //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //           mainAxisSize: MainAxisSize.min,
+      //           children: <Widget>[
+      //             GestureDetector(
+      //               onTap: () {},
+      //               child: Container(
+      //                 height: 24,
+      //                 width: 24,
+      //                 child: SvgPicture.asset(
+      //                   SvgString.attachment,
+      //                   color: ColorManager.dark,
+      //                 ),
+      //               ),
+      //             ),
+      //             SizedBox(
+      //               width: 216,
+      //               child: Container(
+      //                 decoration: BoxDecoration(
+      //                   color: ColorManager.lightGray,
+      //                   borderRadius: BorderRadius.circular(10.0),
+      //                   // border: Border.all(color: ColorManager.dark)
+      //                 ),
+      //                 child: Padding(
+      //                   padding: const EdgeInsets.symmetric(horizontal: 15),
+      //                   child: TextField(
+      //                     decoration: const InputDecoration(
+      //                       hintText: "Write message...",
+      //                       hintStyle: TextStyle(color: Colors.black54),
+      //                       border: InputBorder.none,
+      //                     ),
+      //                     controller: message,
+      //                   ),
+      //                 ),
+      //               ),
+      //             ),
+      //             SizedBox(
+      //               height: 24,
+      //               width: 24,
+      //               child: SvgPicture.asset(
+      //                 SvgString.camera,
+      //                 color: ColorManager.dark,
+      //               ),
+      //             ),
+      //             GestureDetector(
+      //               child: const SizedBox(
+      //                   height: 24,
+      //                   width: 24,
+      //                   child: Icon(
+      //                     Icons.send,
+      //                   )),
+      //               onTap: () {
+      //                 // sendMessageCubit.sendMessage(
+      //                 //   widget.receiverId.toString(),
+      //                 //   SendMessageBody(message.text.toString()),
+      //                 // );
+      //                 //
+      //                 // setState(() {
+      //                 //   messages.add(GetSingleChatData(message: message.text));
+      //                 //   message.clear();
+      //                 // });
+      //               },
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //     ),
+      //
+      //   ],
+      // ),
     );
   }
 }

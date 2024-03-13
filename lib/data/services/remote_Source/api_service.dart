@@ -11,6 +11,7 @@ import '../../Model/chat/getAll_chat.dart';
 import '../../Model/chat/get_single_chat.dart';
 import '../../Model/message/send_message.dart';
 import '../../Model/message/send_message_body.dart';
+import '../../Model/user/getSingleUser/getSingleUserModel.dart';
 
 part 'api_service.g.dart';
 
@@ -44,5 +45,10 @@ abstract class RetrofitClient {
 
   @GET("/v1/chat/{chatID}?page=1&limit=10")
   Future<HttpResponse<GetSingleChat>> getSingleChat(@Path('chatID') String chatID);
+
+
+
+  @GET("/v1/user/get-user/{email}")
+  Future<HttpResponse<GetSingleUser>> getSingleUser(@Path('email') String email);
 
 }

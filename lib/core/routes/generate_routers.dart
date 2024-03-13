@@ -24,12 +24,22 @@ Route<dynamic> onGenerate(RouteSettings settings) {
     case AppRoutes.homeScreen:
       return MaterialPageRoute(builder: (context) => HomeScreen());
     case AppRoutes.chatScreen:
-      // final String? chatName = settings.arguments as String?;
-      final SearchUserData? searchUserData = settings.arguments as SearchUserData?;
+      final data = settings.arguments as  Map<String, dynamic>?;
+      final String? emailId = data!['emailID'];
+      final String? name = data['name'];
+      final String? receiverId = data['receiverId'];
+
+      // final SearchUserData? searchUserData = settings.arguments as SearchUserData?;
       return MaterialPageRoute(
           builder: (context) => ChatScreen(
               // name: chatName,
-              searchUserData: searchUserData));
+              // searchUserData: searchUserData
+            name: name,
+          emailId: emailId,
+             receiverId: receiverId,
+            messagess: [],
+
+          ));
     case AppRoutes.searchScreen:
       return MaterialPageRoute(builder: (context) => SearchUserScreen());
     case AppRoutes.changePassScreen:

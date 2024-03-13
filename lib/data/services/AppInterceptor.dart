@@ -45,11 +45,11 @@ class AppInterceptor extends Interceptor {
     print(decodedToken);
     int expiryDateInSeconds = decodedToken['exp'];
     DateTime expiryDate = DateTime.fromMillisecondsSinceEpoch(expiryDateInSeconds * 1000);
-
-    DateTime indiaTime = expiryDate.add(const Duration(hours: 5, minutes: 30));
-    print("Expiry date is ===> $indiaTime");
-    print("boolean token is expired ===> ${DateTime.now().isAfter(indiaTime)}");
-    return DateTime.now().isAfter(indiaTime);
+    //
+    // DateTime indiaTime = expiryDate.add(const Duration(hours: 5, minutes: 30));
+    // print("Expiry date is ===> $indiaTime");
+    // print("boolean token is expired ===> ${DateTime.now().isAfter(indiaTime)}");
+    return DateTime.now().isAfter(expiryDate);
   }
 
   Future<String> _refreshToken() async {

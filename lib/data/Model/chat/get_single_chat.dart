@@ -2,7 +2,8 @@ import 'get_single_chat_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'get_single_chat.g.dart';
 @JsonSerializable()
-class GetSingleChat {
+class
+GetSingleChat {
   String? msg;
   List<GetSingleChatData>? data;
   int? totalCount;
