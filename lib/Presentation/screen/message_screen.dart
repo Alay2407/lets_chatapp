@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -294,7 +295,12 @@ class _MessageScreenState extends State<MessageScreen> {
                                 },
                               ),
                             );
-                          } else {
+                          }
+
+                          else if(state is GetAllChatErrorState){
+                            return Center(child: Container(child: Text(state.message.toString()),));
+                          }
+                          else {
                             return const Center(
                               child:CircularProgressIndicator(),
                             );

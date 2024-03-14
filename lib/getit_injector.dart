@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lets_chatapp/data/repository_impl/authRepository_impl.dart';
 import 'package:lets_chatapp/data/repository_impl/getAllChatRepositoryImpl.dart';
 import 'package:lets_chatapp/data/repository_impl/searchUserRepositoryImpl.dart';
@@ -13,6 +14,7 @@ import 'package:lets_chatapp/domain/usecases/change_usecase.dart';
 import 'package:lets_chatapp/domain/usecases/login_usecase.dart';
 import 'package:lets_chatapp/domain/usecases/signup_usecase.dart';
 import 'package:dio/dio.dart';
+import 'core/network/network_info.dart';
 import 'core/shared_preferences/SharedPreferenceHelper.dart';
 import 'data/services/remote_Source/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,9 +30,7 @@ void init() async {
   );
 
   locator.registerFactory(
-    () => LoginBloc(
-      locator<LoginUseCase>(),
-    ),
+    () => LoginBloc(locator<LoginUseCase>(), locator<NetworkInfo>()),
   );
   locator.registerFactory(
     () => ChangepassBloc(
@@ -38,9 +38,7 @@ void init() async {
     ),
   );
 
-  locator.registerFactory(() => GetAllChatCubit(
-        locator<GetAllChatRepositoryImpl>(),
-      ));
+  locator.registerFactory(() => GetAllChatCubit(locator<GetAllChatRepositoryImpl>(), locator<NetworkInfo>()));
 
   locator.registerFactory(() => SearchUserBloc(
         locator<SearchUserRepositoryImpl>(),
@@ -92,4 +90,9 @@ void init() async {
 
   //Data Source
   locator.registerSingleton<RetrofitClient>(RetrofitClient(Dio()));
+
+  //Network Info
+  locator.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(locator<InternetConnectionChecker>()));
+  //InternetConnectionChecker
+  locator.registerLazySingleton<InternetConnectionChecker>(() => InternetConnectionChecker());
 }

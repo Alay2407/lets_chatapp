@@ -62,7 +62,7 @@ class ErrorHandler implements Exception {
     } else if (error.type case DioExceptionType.unknown) {
       return DataSource.DEFAULT.getFailure(error.response!.data['message']);
     } else {
-      return DataSource.DEFAULT.getFailure(ResponseCode.NO_INTERNET_CONNECTION);
+      return DataSource.DEFAULT.getFailure(error.response!.data['message']);
     }
   }
 }
@@ -95,7 +95,7 @@ extension DataSourceExtension on DataSource {
       case DataSource.DEFAULT:
         return ServerFailure(error.toString());
       default:
-        return ServerFailure(ResponseMessage.NO_INTERNET_CONNECTION);
+        return ServerFailure(error.toString());
     }
   }
 }
