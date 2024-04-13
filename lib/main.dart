@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:lets_chatapp/Presentation/authentication/welcomePage.dart';
 import 'package:lets_chatapp/Presentation/screen/home_Screen.dart';
 import 'package:lets_chatapp/core/routes/generate_routers.dart';
@@ -40,9 +40,9 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            textTheme: GoogleFonts.poppinsTextTheme(),
-          ),
+          // theme: ThemeData(
+          //   textTheme: GoogleFonts.poppinsTextTheme(),
+          // ),
           onGenerateRoute: onGenerate,
           home: _prefs.getValues('token') != null ? const HomeScreen() : const FirstPage(),
         ));

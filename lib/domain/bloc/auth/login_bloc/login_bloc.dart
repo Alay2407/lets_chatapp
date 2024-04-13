@@ -1,15 +1,14 @@
+
 import 'package:bloc/bloc.dart';
 import 'package:lets_chatapp/data/Model/authModel/login_data.dart';
 import 'package:lets_chatapp/domain/usecases/login_usecase.dart';
 import 'package:meta/meta.dart';
-import 'package:dio/dio.dart';
 
 import '../../../../constants/strings.dart';
 import '../../../../core/error/error_handler.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/shared_preferences/SharedPreferenceHelper.dart';
 import '../../../../getit_injector.dart';
-import '../../chat/getAllChat/get_all_chat_cubit.dart';
 
 part 'login_event.dart';
 
@@ -49,6 +48,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         //   emit(LoginErrorState(e.response!.data['message']));
         //   // print('Response error: ${e.sta}');
         // }
+
         catch (e) {
           print('Errpr handler ${ErrorHandler.handle(e).failure.message}');
           emit(LoginErrorState(ErrorHandler.handle(e).failure.message));

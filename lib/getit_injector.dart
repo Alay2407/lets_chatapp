@@ -33,20 +33,16 @@ void init() async {
     () => LoginBloc(locator<LoginUseCase>(), locator<NetworkInfo>()),
   );
   locator.registerFactory(
-    () => ChangepassBloc(
-      locator<ChangePassUsecase>(),
-    ),
+    () => ChangepassBloc(locator<ChangePassUsecase>(), locator<NetworkInfo>()),
   );
 
   locator.registerFactory(() => GetAllChatCubit(locator<GetAllChatRepositoryImpl>(), locator<NetworkInfo>()));
 
   locator.registerFactory(() => SearchUserBloc(
-        locator<SearchUserRepositoryImpl>(),
+        locator<SearchUserRepositoryImpl>(),locator<NetworkInfo>()
       ));
 
-  locator.registerFactory(() => SendMessageCubit(
-        locator<SendMsgRepositoryImpl>(),
-      ));
+  locator.registerFactory(() => SendMessageCubit(locator<SendMsgRepositoryImpl>(), locator<NetworkInfo>()));
   //Repository
 
   locator.registerLazySingleton<AuthRepositoryimpl>(

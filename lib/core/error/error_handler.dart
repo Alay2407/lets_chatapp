@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../constants/strings.dart';
 import 'failure.dart';
+import 'package:dio/io.dart';
 
 enum DataSource {
   SUCCESS,
@@ -26,20 +27,19 @@ class ErrorHandler implements Exception {
     if (error is DioException) {
       print('Inside if state');
       failure = _handleError(error);
+    } else {
+      print('Inside else state');
+      failure = DataSource.DEFAULT.getFailure(error);
     }
-    // } else {
-    //   print('Inside else state');
-    //   failure = DataSource.DEFAULT.getFailure(error);
-    // }
   }
 
   Failure _handleError(DioException error) {
     if (error.type case DioExceptionType.connectionTimeout) {
-      return DataSource.CONNECT_TIMEOUT.getFailure(error.response!.data['message']);
+      return DataSource.CONNECT_TIMEOUT.getFailure(error);
     } else if (error.type case DioExceptionType.sendTimeout) {
-      return DataSource.SEND_TIMEOUT.getFailure(error.response!.data['message']);
+      return DataSource.SEND_TIMEOUT.getFailure(error);
     } else if (error.type case DioExceptionType.receiveTimeout) {
-      return DataSource.RECEIVE_TIMEOUT.getFailure(error.response!.data['message']);
+      return DataSource.RECEIVE_TIMEOUT.getFailure(error);
     } else if (error.type case DioExceptionType.badResponse) {
       switch (error.response?.statusCode) {
         case ResponseCode.BAD_REQUEST:
@@ -60,9 +60,9 @@ class ErrorHandler implements Exception {
     } else if (error.type case DioExceptionType.cancel) {
       return DataSource.CANCEL.getFailure(error.response!.data['message']);
     } else if (error.type case DioExceptionType.unknown) {
-      return DataSource.DEFAULT.getFailure(error.response!.data['message']);
+      return DataSource.DEFAULT.getFailure(error);
     } else {
-      return DataSource.DEFAULT.getFailure(error.response!.data['message']);
+      return DataSource.DEFAULT.getFailure(error);
     }
   }
 }
@@ -81,17 +81,17 @@ extension DataSourceExtension on DataSource {
       case DataSource.INTERNAL_SERVER_ERROR:
         return ServerFailure(error.toString());
       case DataSource.CONNECT_TIMEOUT:
-        return ServerFailure(error.toString());
+        return const ServerFailure(ResponseMessage.CONNECT_TIMEOUT);
       case DataSource.CANCEL:
-        return ServerFailure(error.toString());
+        return ServerFailure(ResponseMessage.CANCEL);
       case DataSource.RECEIVE_TIMEOUT:
-        return ServerFailure(error.toString());
+        return const ServerFailure(ResponseMessage.RECEIVE_TIMEOUT);
       case DataSource.SEND_TIMEOUT:
-        return ServerFailure(error.toString());
+        return const ServerFailure(ResponseMessage.SEND_TIMEOUT);
       case DataSource.CACHE_ERROR:
-        return ServerFailure(error.toString());
+        return const ServerFailure(ResponseMessage.CACHE_ERROR);
       case DataSource.NO_INTERNET_CONNECTION:
-        return ServerFailure(error.toString());
+        return const ServerFailure(ResponseMessage.NO_INTERNET_CONNECTION);
       case DataSource.DEFAULT:
         return ServerFailure(error.toString());
       default:

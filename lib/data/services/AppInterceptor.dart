@@ -12,6 +12,8 @@ class AppInterceptor extends Interceptor {
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     options.headers["Content-Type"] = "application/json";
+    options.connectTimeout = const Duration(milliseconds: 10000);
+    options.receiveTimeout = const Duration(milliseconds: 10000);
 
     String? token = _prefs.getValues("token");
     if (token != null) {
@@ -44,8 +46,11 @@ class AppInterceptor extends Interceptor {
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
     print(decodedToken);
     int expiryDateInSeconds = decodedToken['exp'];
+
     DateTime expiryDate = DateTime.fromMillisecondsSinceEpoch(expiryDateInSeconds * 1000);
-    //
+    print(expiryDate);
+    print(DateTime.now().isAfter(expiryDate));
+    print('Today date is ===>${DateTime.now()}');
     // DateTime indiaTime = expiryDate.add(const Duration(hours: 5, minutes: 30));
     // print("Expiry date is ===> $indiaTime");
     // print("boolean token is expired ===> ${DateTime.now().isAfter(indiaTime)}");

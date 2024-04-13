@@ -36,6 +36,7 @@ class _MessageScreenState extends State<MessageScreen> {
     super.initState();
     getAllChatCubit.getChat();
   }
+
   final List<String> names = [
     'John',
     'Jane',
@@ -56,6 +57,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
   final String time = "2 min ago";
   var listOfMessageData;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,35 +94,35 @@ class _MessageScreenState extends State<MessageScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: images.length,
                     itemBuilder: (BuildContext context, int index) {
-                        return const Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: CircleAvatar(
-                                radius: 29,
-                                // child: SvgPicture.asset(
-                                //   SvgString.img6,
-                                // ),
-                              ),
+                      return const Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: CircleAvatar(
+                              radius: 29,
+                              // child: SvgPicture.asset(
+                              //   SvgString.img6,
+                              // ),
                             ),
-                            Expanded(
-                              child: Text(
-                                "",
-                                style: TextStyle(color: ColorManager.white),
-                              ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "",
+                              style: TextStyle(color: ColorManager.white),
                             ),
-                          ],
-                        );
-                      },
-                    ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Expanded(
-                  child: Card(
-                    margin: EdgeInsets.zero,
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Expanded(
+                child: Card(
+                  margin: EdgeInsets.zero,
                   borderOnForeground: true,
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
@@ -155,7 +157,6 @@ class _MessageScreenState extends State<MessageScreen> {
                               context: context,
                               message: 'All Chat Received',
                             );
-
                           } else if (state is GetAllChatErrorState) {
                             showSnackbar(
                               color: ColorManager.darkGrey,
@@ -183,7 +184,6 @@ class _MessageScreenState extends State<MessageScreen> {
                         },
                         builder: (context, state) {
                           if (state is GetAllChatFinishedState) {
-
                             var data = state.getAllChat!.data;
                             var chats = data!.chats;
                             return Expanded(
@@ -215,19 +215,19 @@ class _MessageScreenState extends State<MessageScreen> {
                                               ),
                                               GestureDetector(
                                                 onTap: () {
-                                                    setState(() {
-                                                      images.removeAt(index);
-                                                    });
-                                                  },
-                                                  child: CircleAvatar(
-                                                    backgroundColor: ColorManager.red,
-                                                    radius: 18,
-                                                    child: SvgPicture.asset(SvgString.trash),
-                                                  ),
+                                                  setState(() {
+                                                    images.removeAt(index);
+                                                  });
+                                                },
+                                                child: CircleAvatar(
+                                                  backgroundColor: ColorManager.red,
+                                                  radius: 18,
+                                                  child: SvgPicture.asset(SvgString.trash),
                                                 ),
-                                              ],
-                                            ),
-                                            child: InkWell(
+                                              ),
+                                            ],
+                                          ),
+                                          child: InkWell(
                                             onTap: () async {
                                               // ChatScreen(name: chats[index].name.toString(),);
                                               // Navigator.of(context, rootNavigator: true).push(
@@ -295,14 +295,27 @@ class _MessageScreenState extends State<MessageScreen> {
                                 },
                               ),
                             );
-                          }
-
-                          else if(state is GetAllChatErrorState){
-                            return Center(child: Container(child: Text(state.message.toString()),));
-                          }
-                          else {
-                            return const Center(
-                              child:CircularProgressIndicator(),
+                          } else if (state is GetAllChatErrorState) {
+                            return Expanded(
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(state.message.toString()),
+                                    TextButton(
+                                        onPressed: () {
+                                          getAllChatCubit.getChat();
+                                        },
+                                        child: Text('Retry')),
+                                  ],
+                                ),
+                              ),
+                            );
+                          } else {
+                            return const Expanded(
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
                             );
                           }
                         },

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -40,14 +42,14 @@ class _ChatScreenState extends State<ChatScreen> {
   SendMessageCubit sendMessageCubit = locator<SendMessageCubit>();
   TextEditingController message = TextEditingController();
   GetAllChatCubit getAllChatCubit = locator<GetAllChatCubit>();
-
+  final StreamController<String> _messageStreamController = StreamController<String>();
   late IO.Socket socket;
-
+ScrollController scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
     connectToServer();
-    messages = widget.messagess!;
+    messages = widget.messagess!.reversed.toList();
   }
 
   void connectToServer() {
@@ -56,17 +58,22 @@ class _ChatScreenState extends State<ChatScreen> {
       'transports': ['websocket'],
       'autoConnect': false,
     });
-    socket.connect();
-    print('Is connected or not ==> ${socket.connected}');
+
+    // Listen for 'connect' event
+    socket.on('connect', (_) {
+      print('Connected to server');
+    });
     print('Is Active or not ===> ${socket.active}');
     // Listen for incoming chat messages
     socket.on('message', (data) {
-      setState(() {
-        messages.add(data);
-        print('data is====> $data');
-      });
+      // setState(() {
+      //   messages.add(data);
+      //
+      // });
+      print('data is====> $data');
     });
-
+    socket.connect();
+    socket.onConnect((data) => print('Conneted'));
     // Handle errors
     socket.onConnectError((error) {
       print('Socket connection error: $error');
@@ -82,34 +89,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    socket.dispose();
+    // Disconnect from the Socket.IO server when the widget is disposed
+    socket.disconnect();
     super.dispose();
   }
 
   List<GetSingleChatData> messages = [];
-
-  // List<ChatMessage> messages = [
-  //   ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-  //   ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
-  //   ChatMessage(messageContent: "Hey Kriss, I am doing fine dude. wbu?", messageType: "sender"),
-  //   ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
-  //   ChatMessage(messageContent: "Is there any thing wrong?", messageType: "sender"),
-  //   ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-  //   ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
-  //   ChatMessage(messageContent: "Hey Kriss, I am doing fine dude. wbu?", messageType: "sender"),
-  //   ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
-  //   ChatMessage(messageContent: "Is there any thing wrong?", messageType: "sender"),
-  //   ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-  //   ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
-  //   ChatMessage(messageContent: "Hey Kriss, I am doing fine dude. wbu?", messageType: "sender"),
-  //   ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
-  //   ChatMessage(messageContent: "Is there any thing wrong?", messageType: "sender"),
-  //   ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-  //   ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
-  //   ChatMessage(messageContent: "Hey Kriss, I am doing fine dude. wbu?", messageType: "sender"),
-  //   ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
-  //   ChatMessage(messageContent: "Is there any thing wrong?", messageType: "sender"),
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -186,94 +171,99 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Stack(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(bottom: 82),
-            child: ListView.builder(
-              reverse: true,
-              itemCount: messages.length,
-              shrinkWrap: true,
-              padding: const EdgeInsets.only(top: 10, bottom: 10),
-              // physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                // print('Chat id  is===>   ${widget.chatId}');
-                return Container(
-                  padding: const EdgeInsets.only(left: 14, right: 14, top: 10),
-                  child: Align(
-                    alignment: (messages[index].sender_id == widget.receiverId ? Alignment.topLeft : Alignment.topRight),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: messages[index].sender_id == widget.receiverId
-                            ? const BorderRadius.only(
-                                topRight: Radius.circular(20),
-                                topLeft: Radius.circular(0),
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20),
-                              )
-                            : const BorderRadius.only(
-                                topRight: Radius.circular(0),
-                                topLeft: Radius.circular(20),
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20),
-                              ),
-                        color: (messages[index].sender_id == widget.receiverId ? ColorManager.senderColor : ColorManager.reciverColor),
-                      ),
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Text(
-                            messages[index].message.toString(),
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: (messages[index].sender_id == widget.receiverId ? ColorManager.dark : ColorManager.white),
+            padding: EdgeInsets.only(bottom: 82),
+            child: StreamBuilder(
+                stream: _messageStreamController.stream,
+                builder: (context, snapshot) {
+                  return ListView.builder(
+                    controller: scrollController,
+                    // reverse: true,
+                    itemCount: messages.length,
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(top: 10, bottom: 10),
+                    // physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      // print('Chat id  is===>   ${widget.chatId}');
+                      return Container(
+                        padding: const EdgeInsets.only(left: 14, right: 14, top: 10),
+                        child: Align(
+                          alignment: (messages[index].sender_id == widget.receiverId ? Alignment.topLeft : Alignment.topRight),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: messages[index].sender_id == widget.receiverId
+                                  ? const BorderRadius.only(
+                                      topRight: Radius.circular(20),
+                                      topLeft: Radius.circular(0),
+                                      bottomLeft: Radius.circular(20),
+                                      bottomRight: Radius.circular(20),
+                                    )
+                                  : const BorderRadius.only(
+                                      topRight: Radius.circular(0),
+                                      topLeft: Radius.circular(20),
+                                      bottomLeft: Radius.circular(20),
+                                      bottomRight: Radius.circular(20),
+                                    ),
+                              color: (messages[index].sender_id == widget.receiverId ? ColorManager.senderColor : ColorManager.reciverColor),
+                            ),
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              children: [
+                                Text(
+                                  messages[index].message.toString(),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: (messages[index].sender_id == widget.receiverId ? ColorManager.dark : ColorManager.white),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                        ),
+                      );
 
-                // return ListView.builder(
-                //   itemCount: messages.length,
-                //   shrinkWrap: true,
-                //   padding: EdgeInsets.only(top: 10, bottom: 10),
-                //   // physics: NeverScrollableScrollPhysics(),
-                //   itemBuilder: (context, index) {
-                //     return Container(
-                //       padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-                //       child: Align(
-                //         alignment: (messages[index].messageType == "receiver" ? Alignment.topLeft : Alignment.topRight),
-                //         child: Container(
-                //           decoration: BoxDecoration(
-                //             borderRadius: messages[index].messageType == "receiver"
-                //                 ? const BorderRadius.only(
-                //                     topRight: Radius.circular(20),
-                //                     topLeft: Radius.circular(0),
-                //                     bottomLeft: Radius.circular(20),
-                //                     bottomRight: Radius.circular(20),
-                //                   )
-                //                 : const BorderRadius.only(
-                //                     topRight: Radius.circular(0),
-                //                     topLeft: Radius.circular(20),
-                //                     bottomLeft: Radius.circular(20),
-                //                     bottomRight: Radius.circular(20),
-                //                   ),
-                //             color: (messages[index].messageType == "receiver" ? ColorManager.senderColor : ColorManager.reciverColor),
-                //           ),
-                //           padding: const EdgeInsets.all(16),
-                //           child: Text(
-                //             messages[index].messageContent,
-                //             style: TextStyle(
-                //               fontSize: 15,
-                //               color: (messages[index].messageType == "receiver" ? ColorManager.dark : ColorManager.white),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // );
-              },
-            ),
+                      // return ListView.builder(
+                      //   itemCount: messages.length,
+                      //   shrinkWrap: true,
+                      //   padding: EdgeInsets.only(top: 10, bottom: 10),
+                      //   // physics: NeverScrollableScrollPhysics(),
+                      //   itemBuilder: (context, index) {
+                      //     return Container(
+                      //       padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+                      //       child: Align(
+                      //         alignment: (messages[index].messageType == "receiver" ? Alignment.topLeft : Alignment.topRight),
+                      //         child: Container(
+                      //           decoration: BoxDecoration(
+                      //             borderRadius: messages[index].messageType == "receiver"
+                      //                 ? const BorderRadius.only(
+                      //                     topRight: Radius.circular(20),
+                      //                     topLeft: Radius.circular(0),
+                      //                     bottomLeft: Radius.circular(20),
+                      //                     bottomRight: Radius.circular(20),
+                      //                   )
+                      //                 : const BorderRadius.only(
+                      //                     topRight: Radius.circular(0),
+                      //                     topLeft: Radius.circular(20),
+                      //                     bottomLeft: Radius.circular(20),
+                      //                     bottomRight: Radius.circular(20),
+                      //                   ),
+                      //             color: (messages[index].messageType == "receiver" ? ColorManager.senderColor : ColorManager.reciverColor),
+                      //           ),
+                      //           padding: const EdgeInsets.all(16),
+                      //           child: Text(
+                      //             messages[index].messageContent,
+                      //             style: TextStyle(
+                      //               fontSize: 15,
+                      //               color: (messages[index].messageType == "receiver" ? ColorManager.dark : ColorManager.white),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // );
+                    },
+                  );
+                }),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -343,6 +333,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       //   message.clear();
                       // });
                       setState(() {
+                        scrollController.animateTo(scrollController.position.maxScrollExtent*5, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
                         messages.add(GetSingleChatData(message: message.text));
                         message.clear();
                       });

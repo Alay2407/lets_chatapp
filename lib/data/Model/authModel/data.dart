@@ -8,14 +8,14 @@ class Data {
   String? name;
   String? email;
   bool? isDeleted;
-  String? sId;
+  String? id;
   String? createdAt;
   String? updatedAt;
 
   Data({this.name,
     this.email,
     this.isDeleted,
-    this.sId,
+    this.id,
     this.createdAt,
     this.updatedAt});
 

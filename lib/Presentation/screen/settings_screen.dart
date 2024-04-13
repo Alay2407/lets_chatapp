@@ -84,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           _prefs.prefs.clear();
                           Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
                             AppRoutes.login,
-                            (route) => false,
+                            (route) => true,
                           );
                         },
                         icon: const Icon(

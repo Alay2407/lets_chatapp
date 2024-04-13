@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:lets_chatapp/data/Model/chat/getAll_chat.dart';
 import 'package:lets_chatapp/data/Model/user/getSingleUser/getSingleUserModel.dart';
@@ -38,7 +40,6 @@ class GetAllChatCubit extends Cubit<GetAllChatState> {
       //   // emit(ChangepassErrorState(e.response!.statusMessage));
       //   // print('Response error: ${e.sta}');
       // }
-
       catch (e) {
         emit(
           GetAllChatErrorState(
@@ -53,58 +54,68 @@ class GetAllChatCubit extends Cubit<GetAllChatState> {
 
   ///get Single chat api
   getSingleChat(chatID) async {
-    emit(GetSingleChatLoadingState());
-    try {
-      final data = await getAllChatRepositoryImpl.getSingleChat(chatID);
-      // print('Message of get singlechat is ==>  ${data.data![1].id}');
-      // print('Chats Userid is==>> ${data.data!.chats![0].userID}');
-      emit(GetSingleChatFinishedState(data));
-      // emit(ChangepassFinishedState(data));
+    if (await networkInfo.isConnected) {
+      emit(GetSingleChatLoadingState());
+      try {
+        final data = await getAllChatRepositoryImpl.getSingleChat(chatID);
+        // print('Message of get singlechat is ==>  ${data.data![1].id}');
+        // print('Chats Userid is==>> ${data.data!.chats![0].userID}');
+        emit(GetSingleChatFinishedState(data));
+        // emit(ChangepassFinishedState(data));
+      }
+
+      // on DioException catch (e) {
+      //   print('Chat Status Code: ${e.response!.statusCode}');
+      //   print('Chat Response Message: ${e.response!.statusMessage}');
+      //   emit(GetAllChatErrorState(e.response!.data['message']));
+      //
+      //   // emit(ChangepassErrorState(e.response!.statusMessage));
+      //   // print('Response error: ${e.sta}');
+      // }
+
+      catch (e) {
+        emit(
+          GetSingleChatErrorState(
+            ErrorHandler.handle(e).failure.message,
+          ),
+        );
+      }
     }
-
-    // on DioException catch (e) {
-    //   print('Chat Status Code: ${e.response!.statusCode}');
-    //   print('Chat Response Message: ${e.response!.statusMessage}');
-    //   emit(GetAllChatErrorState(e.response!.data['message']));
-    //
-    //   // emit(ChangepassErrorState(e.response!.statusMessage));
-    //   // print('Response error: ${e.sta}');
-    // }
-
-    catch (e) {
-      emit(
-        GetSingleChatErrorState(
-          ErrorHandler.handle(e).failure.message,
-        ),
-      );
+    else {
+      return emit(GetSingleChatErrorState((AppStrings.noInternetError)));
     }
   }
 
   ///Get Single user
   getSingleUser(emailID) async {
-    try {
-      final data = await getAllChatRepositoryImpl.getSingleUser(emailID);
-      print('Message of get singleuser is ==>  $data');
-      // print('Chats Userid is==>> ${data.data!.chats![0].userID}');
-      emit(GetSingleUserFinishedState(data));
-      // emit(ChangepassFinishedState(data));
+    if (await networkInfo.isConnected)  {
+      try {
+        final data = await getAllChatRepositoryImpl.getSingleUser(emailID);
+        print('Message of get singleuser is ==>  $data');
+        // print('Chats Userid is==>> ${data.data!.chats![0].userID}');
+        emit(GetSingleUserFinishedState(data));
+        // emit(ChangepassFinishedState(data));
+      }
+
+      // on DioException catch (e) {
+      //   print('Chat Status Code: ${e.response!.statusCode}');
+      //   print('Chat Response Message: ${e.response!.statusMessage}');
+      //   emit(GetAllChatErrorState(e.response!.data['message']));
+      //
+      //   // emit(ChangepassErrorState(e.response!.statusMessage));
+      //   // print('Response error: ${e.sta}');
+      // }
+
+      catch (e) {
+        emit(
+          GetSingleUserErrorState(
+            ErrorHandler.handle(e).failure.message,
+          ),
+        );
+      }
     }
-
-    // on DioException catch (e) {
-    //   print('Chat Status Code: ${e.response!.statusCode}');
-    //   print('Chat Response Message: ${e.response!.statusMessage}');
-    //   emit(GetAllChatErrorState(e.response!.data['message']));
-    //
-    //   // emit(ChangepassErrorState(e.response!.statusMessage));
-    //   // print('Response error: ${e.sta}');
-    // }
-
-    catch (e) {
-      emit(
-        GetSingleUserErrorState(
-          ErrorHandler.handle(e).failure.message,
-        ),
-      );
+    else {
+      return emit(GetSingleUserErrorState((AppStrings.noInternetError)));
     }
   }
 }
